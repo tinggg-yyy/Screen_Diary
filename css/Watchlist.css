@@ -7,7 +7,7 @@
   --c-bg-btn: #7353479a;
   --c-btn-hover: #4b362ea6;
   --c-btn-text: #f8fafc8e;
-  --c-message-bg: #f8f2dba9;
+  --c-message-bg: #f8f2dbcf;
   --f-bg: #906c577b;
   --f-text: #4b362ed8;
   --ff-heading: "Frijole", system-ui;
@@ -34,11 +34,12 @@
 /* Global Styles */
 * {
   box-sizing: border-box;
+  cursor: url("../img/cursor-1.png") 30 30, auto;
 }
 
 a {
   text-decoration: none;
-  cursor: pointer;
+  cursor: url("../img/cursor-2.png") 30 30, auto;
 }
 a:hover {
   text-decoration: none;
@@ -326,7 +327,6 @@ footer a {
     flex-direction: column;
     justify-content: center;
     align-items: stretch;
-    padding: 0 0.5rem;
   }
 
   .mobile-menu {
@@ -336,7 +336,7 @@ footer a {
     right: 1.5rem;
     color: var(--c-bg-btn);
     font-size: 2rem;
-    cursor: pointer;
+  cursor: url("../img/cursor-2.png") 30 30, auto;
   }
 
   .mobile-menu:hover {
@@ -382,12 +382,9 @@ footer a {
     text-align: center;
   }
 
-  #main-nav {
-    display: none;
-  }
-
   /* only added/remove aka toggled via JS */
   .show {
     display: block;
+    width:100%;
   }
 }

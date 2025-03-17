@@ -34,11 +34,12 @@
 /* Global Styles */
 * {
   box-sizing: border-box;
+  cursor: url("../img/cursor-1.png") 30 30, auto;
 }
 
 a {
   text-decoration: none;
-  cursor: pointer;
+  cursor: url("../img/cursor-2.png") 30 30, auto;
 }
 a:hover {
   text-decoration: none;
@@ -69,6 +70,7 @@ body#tech button body#tech input body#tech textarea {
 
 /* Header */
 header {
+  width: 100%;
   font-family: var(--ff-heading);
   display: flex;
   flex-direction: column;
@@ -104,11 +106,13 @@ header nav {
 }
 
 .menu li a {
-  display: block;
   padding: 1rem 10rem;
+  display: block;
+  text-align: center;
 }
 
 .menu li a:hover {
+  width: 100%;
   color: var(--c-btn-text);
   background-color: var(--c-btn-hover);
 }
@@ -252,6 +256,7 @@ form {
 
 .btn-dark:hover {
   background-color: var(--c-btn-hover);
+  cursor: url("../img/cursor-2.png") 30 30, auto;
 }
 
 /* Footer */
@@ -269,6 +274,11 @@ footer {
 
 footer a {
   color: var(--f-text);
+}
+
+footer a:hover{
+  color: var(--c-btn-hover);
+  cursor: url("../img/cursor-2.png") 30 30, auto;
 }
 
 /* Media Queries */
@@ -314,7 +324,7 @@ footer a {
     right: 1.5rem;
     color: var(--c-bg-btn);
     font-size: 2rem;
-    cursor: pointer;
+    cursor: url("../img/cursor-2.png") 30 30, auto;
   }
 
   .mobile-menu:hover {

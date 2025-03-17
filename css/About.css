@@ -34,11 +34,12 @@
 /* Global Styles */
 * {
   box-sizing: border-box;
+  cursor: url("../img/cursor-1.png") 30 30, auto;
 }
 
 a {
   text-decoration: none;
-  cursor: pointer;
+  cursor: url("../img/cursor-2.png") 30 30, auto;
 }
 a:hover {
   text-decoration: none;
@@ -305,15 +306,10 @@ footer a {
     font-size: 30px;
   }
 
-  body {
-    min-width: 100vh;
-  }
-
   header {
     flex-direction: column;
     justify-content: center;
     align-items: stretch;
-    padding: 0 0.5rem;
   }
 
   .mobile-menu {
@@ -323,7 +319,7 @@ footer a {
     right: 1.5rem;
     color: var(--c-bg-btn);
     font-size: 2rem;
-    cursor: pointer;
+    cursor: url("../img/cursor-2.png") 30 30, auto;
   }
 
   .mobile-menu:hover {
@@ -390,5 +386,6 @@ footer a {
   /* only added/remove aka toggled via JS */
   .show {
     display: block;
+    width: 100%;
   }
 }
