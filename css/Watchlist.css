@@ -12,6 +12,7 @@
   --f-text: #4b362ed8;
   --ff-heading: "Frijole", system-ui;
   --ff-body: "Kranky", serif;
+  --star-c: #dc8446c8;
 }
 
 /* Apply different IDs for Different Color Themes */
@@ -200,8 +201,24 @@ img {
   font-size: 1.5rem;
 }
 
+.description a {
+  color: var(--c-text);
+}
+
+.stars {
+  display: flex;
+  flex-direction: row; 
+  justify-content: center; 
+  gap: 0.5rem; 
+}
+
+.checked {
+  color: var(--star-c);
+}
+
 .thumb:hover .description {
   opacity: 1;
+  cursor: url("../img/cursor-2.png") 30 30, auto;
 }
 
 /* set up my initial text scale for transforms */
@@ -336,7 +353,7 @@ footer a {
     right: 1.5rem;
     color: var(--c-bg-btn);
     font-size: 2rem;
-  cursor: url("../img/cursor-2.png") 30 30, auto;
+    cursor: url("../img/cursor-2.png") 30 30, auto;
   }
 
   .mobile-menu:hover {
@@ -385,6 +402,6 @@ footer a {
   /* only added/remove aka toggled via JS */
   .show {
     display: block;
-    width:100%;
+    width: 100%;
   }
 }
