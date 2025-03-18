@@ -207,9 +207,9 @@ img {
 
 .stars {
   display: flex;
-  flex-direction: row; 
-  justify-content: center; 
-  gap: 0.5rem; 
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .checked {
@@ -235,6 +235,14 @@ img {
 .thumb:hover .description a {
   opacity: 1;
   transform: scale(1);
+}
+
+.thumb img {
+  transform: scale(1);
+  transition: all 0.5s ease-out;
+}
+.thumb:hover img {
+  transform: scale(1.1);
 }
 
 /* Recommendation Form */
