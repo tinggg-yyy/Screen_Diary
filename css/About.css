@@ -307,6 +307,9 @@ footer a {
     font-size: 30px;
   }
 
+  body {
+    height: 100vh;
+  }
   header {
     flex-direction: column;
     justify-content: center;
