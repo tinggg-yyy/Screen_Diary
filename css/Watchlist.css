@@ -354,6 +354,13 @@ footer a {
     align-items: stretch;
   }
 
+  #main-nav {
+    display: none;
+  }
+  #main-nav.show {
+    display: block;
+  }
+
   .mobile-menu {
     display: block;
     position: absolute;
