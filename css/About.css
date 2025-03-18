@@ -50,6 +50,7 @@ li {
 }
 
 body {
+  height: 100%;
   margin: 0;
   border: 1rem ridge var(--c-btn-hover);
   background-image: url("../img/background.jpg");
@@ -305,7 +306,6 @@ footer a {
   #tech h1 {
     font-size: 30px;
   }
-
 
   header {
     flex-direction: column;
