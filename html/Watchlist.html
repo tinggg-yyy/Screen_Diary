@@ -9,29 +9,137 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
-    <script type="text/javascript">
-      // wait for the entire DOM Content to load
-      // add event listener for CLICK events on our hamburger menu
-      // write a function to toggle the .show class on our nav tag
-      document.addEventListener("DOMContentLoaded", function () {
-        // this is where i can store HTML elements as variables
-        // this is where i can add other event listeners
-        const hamburger = document.getElementById("hamburger");
-        hamburger.addEventListener("click", toggleMenu);
+    <script type="text/javascript" src="../js/Watchlist.js" defer></script>
+    <script>
+      // Thumb data array
+      const thumbs = [
+        {
+          title: "The White Lotus 1",
+          category: "WATCHED",
+          rating: 5,
+          image: "../img/whitelotus1.jpg",
+        },
+        {
+          title: "The White Lotus 2",
+          category: "WATCHED",
+          rating: 4,
+          image: "../img/whitelotus2.jpg",
+        },
+        {
+          title: "The White Lotus 3",
+          category: "WATCHED",
+          rating: 3,
+          image: "../img/whitelotus3.jpg",
+        },
+        {
+          title: "Sakamoto Days",
+          category: "WATCHING",
+          rating: 4,
+          image: "../img/SakamotoDays.jpg",
+        },
+        {
+          title: "Dandadan",
+          category: "TO-WATCH",
+          rating: 0,
+          image: "../img/dandadan.jpg",
+        },
+        {
+          title: "Delicious In Dungeon",
+          category: "WATCHED",
+          rating: 5,
+          image: "../img/DeliciousInDungeon.jpg",
+        },
+      ];
+
+      // Dynamically render Thumb data
+      const renderThumbs = (filterCategory = "ALL") => {
+        const container = document.getElementById("thumb-container");
+        container.innerHTML = ""; // Clear the container
+
+        // Filter data based on category
+        const filteredThumbs = thumbs.filter(
+          (thumb) =>
+            filterCategory === "ALL" || thumb.category === filterCategory
+        );
+
+        // Dynamically generate HTML
+        filteredThumbs.forEach((thumb) => {
+          const thumbHTML = `
+            <div class="thumb" data-title="${thumb.title}" data-category="${
+            thumb.category
+          }">
+              <div class="content-row">
+                <img src="${thumb.image}" alt="poster" />
+                <article class="description">
+                  <h3 id="filmtitle"><a href="#">${thumb.title}</a></h3>
+                  <div class="stars">${generateStars(thumb.rating)}</div>
+                </article>
+              </div>
+            </div>
+          `;
+          container.innerHTML += thumbHTML;
+        });
+      };
+
+      // Generate HTML for stars
+      const generateStars = (rating) => {
+        let starsHTML = "";
+        for (let i = 0; i < 5; i++) {
+          starsHTML += `<span class="fa fa-star ${
+            i < rating ? "checked" : ""
+          }"></span>`;
+        }
+        return starsHTML;
+      };
+
+      // Search function
+      const searchFunction = () => {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toUpperCase();
+        const filteredThumbs = thumbs.filter((thumb) =>
+          thumb.title.toUpperCase().includes(filter)
+        );
+        renderThumbsFromArray(filteredThumbs);
+      };
+
+      // Render filtered Thumb data
+      const renderThumbsFromArray = (filteredThumbs) => {
+        const container = document.getElementById("thumb-container");
+        container.innerHTML = ""; // Clear the container
+
+        filteredThumbs.forEach((thumb) => {
+          const thumbHTML = `
+            <div class="thumb" data-title="${thumb.title}" data-category="${
+            thumb.category
+          }">
+              <div class="content-row">
+                <img src="${thumb.image}" alt="poster" />
+                <article class="description">
+                  <h3 id="filmtitle"><a href="#">${thumb.title}</a></h3>
+                  <div class="stars">${generateStars(thumb.rating)}</div>
+                </article>
+              </div>
+            </div>
+          `;
+          container.innerHTML += thumbHTML;
+        });
+      };
+
+      // Initial render of all Thumbs
+      document.addEventListener("DOMContentLoaded", () => {
+        renderThumbs(); // Display all content when the page loads
       });
-      function toggleMenu() {
-        const navbar = document.getElementById("main-nav");
-        navbar.classList.toggle("show");
-      }
+
+      // Bind category filter function
+      const filterThumbs = (category) => {
+        renderThumbs(category);
+      };
     </script>
   </head>
 
-  <!-- Body -->
   <body id="tech">
     <!-- Header -->
     <header>
-      <!-- HTML entity starts with & and end with; they contain character codes for special characters -->
-      <!-- This hamburger menu icon will hide on desktop, show on mobile , be absolutely positioned, clickable via JS to hide/show main nav-->
       <span class="mobile-menu" id="hamburger"> &#8801; </span>
       <nav id="main-nav">
         <ul class="menu">
@@ -40,122 +148,29 @@
           <li><a href="./Watchlist.html">WATCHLIST</a></li>
         </ul>
       </nav>
-
       <h1 class="title">WATCHLIST</h1>
-
-      <nav id="sub-nav">
-        <ul class="menu" id="sub-menu">
-          <li><a href="#">WATCHED</a></li>
-          <li><a href="#">WATCHING</a></li>
-          <li><a href="#">TO-WATCH</a></li>
-        </ul>
-      </nav>
     </header>
 
+    <!-- Sub Navigation -->
+    <nav id="sub-nav">
+      <ul class="sub-menu">
+        <li><a href="#" onclick="filterThumbs('ALL')">ALL</a></li>
+        <li><a href="#" onclick="filterThumbs('WATCHED')">WATCHED</a></li>
+        <li><a href="#" onclick="filterThumbs('WATCHING')">WATCHING</a></li>
+        <li><a href="#" onclick="filterThumbs('TO-WATCH')">TO-WATCH</a></li>
+        <input
+          type="text"
+          id="searchInput"
+          onkeyup="searchFunction()"
+          placeholder="Search.."
+        />
+        <button type="submit"><i class="fa fa-search"></i></button>
+      </ul>
+    </nav>
+
     <!-- Main Content -->
-    <div class="container">
-      <div class="thumb">
-        <!-- <h2 class="category">WATCHING</h2> -->
-        <div class="content-row">
-          <img src="../img/whitelotus1.jpg" alt="poster" />
-          <article class="description">
-            <h3 id="filmtitle"><a href="#">The White Lotus 1</a></h3>
-            <div class="stars">
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-            </div>
-          </article>
-        </div>
-      </div>
+    <div class="container" id="thumb-container"></div>
 
-      <div class="thumb">
-        <!-- <h2 class="category">TO-WATCH</h2> -->
-        <div class="content-row">
-          <img src="../img/whitelotus2.jpg" alt="poster" />
-          <article class="description">
-            <h3 id="filmtitle"><a href="#">The White Lotus 2</a></h3>
-            <div class="stars">
-              <span class="fa fa-star"></span>
-              <span class="fa fa-star"></span>
-              <span class="fa fa-star"></span>
-              <span class="fa fa-star"></span>
-              <span class="fa fa-star"></span>
-            </div>
-          </article>
-        </div>
-      </div>
-
-      <div class="thumb">
-        <!-- <h2 class="category">WATCHED</h2> -->
-        <div class="content-row">
-          <img src="../img/whitelotus3.jpg" alt="poster" />
-          <article class="description">
-            <h3 id="filmtitle"><a href="#">The White Lotus 3</a></h3>
-            <div class="stars">
-              <span class="fa fa-star"></span>
-              <span class="fa fa-star"></span>
-              <span class="fa fa-star"></span>
-              <span class="fa fa-star"></span>
-              <span class="fa fa-star"></span>
-            </div>
-          </article>
-        </div>
-      </div>
-
-      <div class="thumb">
-        <!-- <h2 class="category">WATCHED</h2> -->
-        <div class="content-row">
-          <img src="../img/SakamotoDays.jpg" alt="poster" />
-          <article class="description">
-            <h3 id="filmtitle"><a href="#">Sakamoto Days</a></h3>
-            <div class="stars">
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star"></span>
-              <span class="fa fa-star"></span>
-            </div>
-          </article>
-        </div>
-      </div>
-
-      <div class="thumb">
-        <!-- <h2 class="category">WATCHED</h2> -->
-        <div class="content-row">
-          <img src="../img/dandadan.jpg" alt="poster" />
-          <article class="description">
-            <h3 id="filmtitle"><a href="#">Dandadan</a></h3>
-            <div class="stars">
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star"></span>
-            </div>
-          </article>
-        </div>
-      </div>
-
-      <div class="thumb">
-        <!-- <h2 class="category">WATCHED</h2> -->
-        <div class="content-row">
-          <img src="../img/DeliciousInDungeon.jpg" alt="poster" />
-          <article class="description">
-            <h3 id="filmtitle"><a href="#">Delicious In Dungeon</a></h3>
-            <div class="stars">
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-            </div>
-          </article>
-        </div>
-      </div>
-    </div>
     <footer>
       <p>© 2025 · Ting's ScreenDiary · All Rights Reserved</p>
       <nav>

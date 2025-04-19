@@ -184,7 +184,7 @@ img {
   text-align: left;
 }
 
-.description a{
+.description a {
   color: var(--c-text);
 }
 
@@ -280,7 +280,7 @@ footer a {
   color: var(--f-text);
 }
 
-footer a:hover{
+footer a:hover {
   color: var(--c-btn-hover);
   cursor: url("../img/cursor-2.png") 30 30, auto;
 }
