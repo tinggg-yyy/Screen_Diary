@@ -16,23 +16,6 @@
   --nav-bg: #f8eadbdb;
 }
 
-/* Apply different IDs for Different Color Themes */
-/* #green {
-  --c-bg: #a7f3d0;
-  --c-text: #065f46;
-  --c-bg-btn: #059669;
-  --c-btn-hover: #065f46;
-  --c-btn-text: #ecfdf5;
-}
-
-#blue {
-  --c-bg: #1e3a8a;
-  --c-text: #dbeafe;
-  --c-bg-btn: #3b82f6;
-  --c-btn-hover: #1d4ed8;
-  --c-btn-text: #eff6ff;
-} */
-
 /* Global Styles */
 * {
   box-sizing: border-box;
@@ -132,14 +115,20 @@ header nav {
   color: var(--c-text);
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: space-between; /* Ensure space between menu items and search bar */
   font-size: 0.8rem;
   white-space: nowrap;
+  padding: 0;
 }
 
 #sub-nav {
   overflow: hidden;
   background-color: var(--nav-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Push search bar to the right */
+  padding: 0 1rem;
 }
 
 /* Style the links inside the navigation bar */
@@ -158,15 +147,26 @@ header nav {
   color: var(--c-btn-text);
 }
 
+/* Active state for the Watchlist link */
+#watchlist-link.active {
+  background-color: var(--c-btn-hover);
+  color: var(--c-btn-text);
+}
+
 /* Style the search box inside the navigation bar */
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* Push search bar to the right */
+}
+
 #sub-nav input[type="text"] {
   padding: 6px;
-  border: none;
-  margin-top: 8px;
-  margin-right: 16px;
+  border: 1px solid #ccc;
   font-size: 17px;
   font-family: var(--ff-body);
-  cursor: url("../img/cursor-2.png") 30 30, auto;
+  border-radius: 4px;
+  margin-right: 0.5rem;
 }
 
 #sub-nav button {
@@ -174,10 +174,10 @@ header nav {
   color: var(--c-btn-text);
   border: none;
   padding: 6px 10px;
-  text-decoration: none;
-  margin-top: 8px;
-  cursor: url("../img/cursor-2.png") 30 30, auto;
+  border-radius: 4px;
+  cursor: pointer;
 }
+
 #sub-nav button:hover {
   background-color: var(--c-btn-text);
   color: var(--c-btn-hover);

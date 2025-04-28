@@ -2469,7 +2469,24 @@
         renderThumbs(); // 页面加载时显示所有内容
       });
 
-      // 绑定分类过滤功能
+      document.addEventListener("DOMContentLoaded", () => {
+        // 保持 Watchlist 链接的 active 状态
+        const watchlistLink = document.getElementById("watchlist-link");
+        if (watchlistLink) {
+          watchlistLink.classList.add("active");
+        }
+      });
+
+      // 更新标题并过滤内容
+      const updateTitle = (newTitle) => {
+        const mainTitle = document.getElementById("main-title");
+        if (mainTitle) {
+          mainTitle.textContent = newTitle; // 更新标题内容
+        }
+        filterThumbs(newTitle); // 调用过滤函数
+      };
+
+      // 过滤 Thumb 数据
       const filterThumbs = (category) => {
         currentPage = 1; // 重置到第一页
         renderThumbs(category);
@@ -2485,19 +2502,20 @@
         <ul class="menu">
           <li><a href="./About.html">ABOUT</a></li>
           <li><a href="../index.html">HOME</a></li>
-          <li><a href="./Watchlist.html">WATCHLIST</a></li>
+          <li><a href="./Watchlist.html" id="watchlist-link">WATCHLIST</a></li>
         </ul>
       </nav>
-      <h1 class="title">WATCHLIST</h1>
+      <h1 class="title" id="main-title">WATCHLIST</h1>
     </header>
 
     <!-- Sub Navigation -->
     <nav id="sub-nav">
       <ul class="sub-menu">
-        <li><a href="#" onclick="filterThumbs('ALL')">ALL</a></li>
-        <li><a href="#" onclick="filterThumbs('WATCHED')">WATCHED</a></li>
-        <li><a href="#" onclick="filterThumbs('WATCHING')">WATCHING</a></li>
-        <li><a href="#" onclick="filterThumbs('TO-WATCH')">TO-WATCH</a></li>
+        <li><a href="#" onclick="updateTitle('WATCHED')">WATCHED</a></li>
+        <li><a href="#" onclick="updateTitle('WATCHING')">WATCHING</a></li>
+        <li><a href="#" onclick="updateTitle('TO-WATCH')">TO-WATCH</a></li>
+      </ul>
+      <div class="search-container">
         <input
           type="text"
           id="searchInput"
@@ -2505,7 +2523,7 @@
           placeholder="Search.."
         />
         <button type="submit"><i class="fa fa-search"></i></button>
-      </ul>
+      </div>
     </nav>
 
     <!-- Main Content -->

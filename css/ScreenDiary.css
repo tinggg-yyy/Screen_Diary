@@ -124,6 +124,12 @@ header nav {
   padding: 1rem;
 }
 
+/* Active state for navigation links */
+#main-nav a.active {
+  background-color: var(--c-btn-hover);
+  color: var(--c-btn-text);
+}
+
 /* container */
 
 img {
