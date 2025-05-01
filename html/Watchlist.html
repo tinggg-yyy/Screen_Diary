@@ -2635,10 +2635,6 @@
         const container = document.getElementById("thumb-container");
         container.innerHTML = ""; // Clear the container
 
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const paginatedThumbs = filteredThumbs.slice(startIndex, endIndex);
-
         paginatedThumbs.forEach((thumb) => {
           const thumbHTML = `
             <div class="thumb" data-title="${thumb.title}" data-category="${
