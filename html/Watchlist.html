@@ -20,14 +20,15 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
     <script>
-      let currentPage = 1; // 当前页码
-      const itemsPerPage = 12; // 每页显示的 thumb 数量
-      let currentFilter = "ALL"; // 当前过滤条件
-      let currentCategoryFilter = "ALL"; // 当前的分类过滤条件
-      let currentTypeFilter = "ALL"; // 当前的类型过滤条件
-      let currentGenreFilter = "ALL"; // 当前的分类过滤条件
-      let currentCountryFilter = "ALL"; // 当前的国家过滤条件
+      let currentPage = 1;
+      const itemsPerPage = 12;
+      let currentFilter = "ALL";
+      let currentCategoryFilter = "ALL";
+      let currentTypeFilter = "ALL";
+      let currentGenreFilter = "ALL";
+      let currentCountryFilter = "ALL";
 
+      // Genres Objects
       const genres = [
         "Thriller",
         "Mystery",
@@ -45,57 +46,10 @@
         "Sport",
       ];
 
+      // Country  Objects
       const countries = ["Japan", "US", "UK", "Korea"];
 
-      const filterGenre = (genre, element) => {
-        // 移除所有选项的 active 类
-        document.querySelectorAll("#genre-filter li a").forEach((link) => {
-          link.classList.remove("active");
-        });
-
-        // 为当前选中的选项添加 active 类
-        element.classList.add("active");
-
-        currentGenreFilter = genre; // 更新分类过滤条件
-        currentPage = 1; // 重置到第一页
-        renderThumbs(); // 重新渲染
-      };
-
-      const filterCountry = (country, element) => {
-        // 移除所有选项的 active 类
-        document.querySelectorAll("#country-filter li a").forEach((link) => {
-          link.classList.remove("active");
-        });
-
-        // 为当前选中的选项添加 active 类
-        element.classList.add("active");
-
-        currentCountryFilter = country; // 更新国家过滤条件
-        currentPage = 1; // 重置到第一页
-        renderThumbs(); // 重新渲染
-      };
-
-      const renderCountryFilter = () => {
-        const countryContainer = document.getElementById(
-          "country-filter-container"
-        );
-        const countryList = document.getElementById("country-filter");
-
-        // 清空之前的国家选项
-        countryList.innerHTML = "";
-
-        // 动态生成国家选项
-        countries.forEach((country) => {
-          const countryItem = document.createElement("li");
-          countryItem.innerHTML = `<a href="#" onclick="filterCountry('${country}', this)">${country}</a>`;
-          countryList.appendChild(countryItem);
-        });
-
-        // 显示国家容器
-        countryContainer.style.display = "block";
-      };
-
-      // Thumb data array
+      // Thumb Objects
       const thumbs = [
         {
           title: "The White Lotus",
@@ -2537,12 +2491,43 @@
         },
       ];
 
-      // 渲染分页的 Thumb 数据
+      // 1. Initialization and Event Binding
+      document.addEventListener("DOMContentLoaded", function () {
+        renderThumbs(); // Render thumbnails on page load
+        const watchlistLink = document.getElementById("watchlist-link");
+        if (watchlistLink) {
+          watchlistLink.classList.add("active"); // Highlight the Watchlist link
+        }
+
+        const hamburger = document.getElementById("hamburger");
+        if (hamburger) {
+          hamburger.addEventListener("click", function (e) {
+            e.stopPropagation(); // Prevent event bubbling
+            toggleMenu();
+          });
+        }
+      });
+
+      // Toggle the hamburger menu
+      function toggleMenu() {
+        const navbar = document.getElementById("main-nav");
+        if (navbar) {
+          navbar.classList.toggle("show");
+        }
+      }
+
+      // Flip the film card
+      function flipCard(element) {
+        const card = element.closest(".film-card");
+        card.classList.toggle("flipped");
+      }
+
+      // 2. Rendering Functions
       const renderThumbs = () => {
         const container = document.getElementById("thumb-container");
-        container.innerHTML = ""; // 清空容器
+        container.innerHTML = ""; // Clear the container
 
-        // 根据过滤条件筛选数据
+        // Filter thumbnails based on current filters
         const filteredThumbs = thumbs.filter((thumb) => {
           const matchesCategory =
             currentCategoryFilter === "ALL" ||
@@ -2565,50 +2550,114 @@
           );
         });
 
-        // 计算分页数据
+        // Pagination logic
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const paginatedThumbs = filteredThumbs.slice(startIndex, endIndex);
 
-        // 动态生成 HTML
+        // Dynamically generate HTML for thumbnails
         paginatedThumbs.forEach((thumb) => {
           const thumbHTML = `
-                  <div class="thumb" data-title="${
-                    thumb.title
-                  }" data-category="${thumb.category}">
-                      <div class="film-card" onclick="flipCard(this)">
-              <!-- 正面 -->
-              <div class="film-front">
-                        <img data-src="${
-                          thumb.image
-                        }" alt="poster" class="lazy-image" />
-                        <article class="description">
-                          <h3 id="filmtitle"=>${thumb.title}</h3>
-                          <div class="stars">${generateStars(
-                            thumb.rating
-                          )}</div>
-                        </article>
-                    </div>
-              <!-- 背面 -->
-              <div class="film-back">
-                <p class="film-comment">
-                   ${thumb.comment || "No comment available."}
-                </p>
+            <div class="thumb" data-title="${thumb.title}" data-category="${
+            thumb.category
+          }">
+              <div class="film-card" onclick="flipCard(this)">
+                <div class="film-front">
+                  <img data-src="${
+                    thumb.image
+                  }" alt="poster" class="lazy-image" />
+                  <article class="description">
+                    <h3 id="filmtitle">${thumb.title}</h3>
+                    <div class="stars">${generateStars(thumb.rating)}</div>
+                  </article>
+                </div>
+                <div class="film-back">
+                  <p class="film-comment">${
+                    thumb.comment || "No comment available."
+                  }</p>
+                </div>
               </div>
             </div>
-          </div>
-                `;
+          `;
           container.innerHTML += thumbHTML;
         });
 
-        // 初始化懒加载
-        initializeLazyLoading();
-
-        // 渲染分页按钮
-        renderPagination(filteredThumbs.length);
+        initializeLazyLoading(); // Initialize lazy loading
+        renderPagination(filteredThumbs.length); // Render pagination
       };
 
-      // Lazy loading with Intersection Observer
+      // Render pagination buttons
+      const renderPagination = (totalItems) => {
+        const paginationContainer = document.getElementById("pagination");
+        paginationContainer.innerHTML = ""; // Clear pagination buttons
+
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        // Previous button
+        const prevButton = document.createElement("button");
+        prevButton.textContent = "Previous";
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener("click", () => {
+          if (currentPage > 1) {
+            currentPage--;
+            renderThumbs();
+          }
+        });
+        paginationContainer.appendChild(prevButton);
+
+        // Page number buttons
+        for (let i = 1; i <= totalPages; i++) {
+          const button = document.createElement("button");
+          button.textContent = i;
+          button.className = i === currentPage ? "active" : "";
+          button.addEventListener("click", () => {
+            currentPage = i;
+            renderThumbs();
+          });
+          paginationContainer.appendChild(button);
+        }
+
+        // Next button
+        const nextButton = document.createElement("button");
+        nextButton.textContent = "Next";
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.addEventListener("click", () => {
+          if (currentPage < totalPages) {
+            currentPage++;
+            renderThumbs();
+          }
+        });
+        paginationContainer.appendChild(nextButton);
+      };
+
+      // Render thumbnails from a filtered array
+      const renderThumbsFromArray = (filteredThumbs) => {
+        const container = document.getElementById("thumb-container");
+        container.innerHTML = ""; // Clear the container
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const paginatedThumbs = filteredThumbs.slice(startIndex, endIndex);
+
+        paginatedThumbs.forEach((thumb) => {
+          const thumbHTML = `
+            <div class="thumb" data-title="${thumb.title}" data-category="${
+            thumb.category
+          }">
+              <img data-src="${thumb.image}" alt="poster" class="lazy-image" />
+              <article class="description">
+                <h3 id="filmtitle">${thumb.title}</h3>
+                <div class="stars">${generateStars(thumb.rating)}</div>
+              </article>
+            </div>
+          `;
+          container.innerHTML += thumbHTML;
+        });
+
+        renderPagination(filteredThumbs.length); // Render pagination
+      };
+
+      // Initialize lazy loading for images
       const initializeLazyLoading = () => {
         const lazyImages = document.querySelectorAll(".lazy-image");
 
@@ -2633,7 +2682,44 @@
         lazyImages.forEach((img) => observer.observe(img));
       };
 
-      // 生成星星的 HTML
+      // 3. Filtering Functions
+      const filterCategory = (type, element) => {
+        document.querySelectorAll(".sub-menu li a").forEach((link) => {
+          link.classList.remove("active");
+        });
+        element.classList.add("active");
+
+        currentTypeFilter = type; // Update type filter
+        currentPage = 1; // Reset to the first page
+
+        renderCountryFilter(); // Render country filter
+        renderGenreFilter(); // Render genre filter
+        renderThumbs(); // Re-render thumbnails
+      };
+
+      const filterGenre = (genre, element) => {
+        document.querySelectorAll("#genre-filter li a").forEach((link) => {
+          link.classList.remove("active");
+        });
+        element.classList.add("active");
+
+        currentGenreFilter = genre; // Update genre filter
+        currentPage = 1; // Reset to the first page
+        renderThumbs(); // Re-render thumbnails
+      };
+
+      const filterCountry = (country, element) => {
+        document.querySelectorAll("#country-filter li a").forEach((link) => {
+          link.classList.remove("active");
+        });
+        element.classList.add("active");
+
+        currentCountryFilter = country; // Update country filter
+        currentPage = 1; // Reset to the first page
+        renderThumbs(); // Re-render thumbnails
+      };
+
+      // 4. Utility Functions
       const generateStars = (rating) => {
         let starsHTML = "";
         for (let i = 0; i < 5; i++) {
@@ -2644,184 +2730,66 @@
         return starsHTML;
       };
 
-      // 渲染分页按钮
-      const renderPagination = (totalItems) => {
-        const paginationContainer = document.getElementById("pagination");
-        paginationContainer.innerHTML = ""; // 清空分页按钮
-
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-        const prevButton = document.createElement("button");
-        prevButton.textContent = "Previous";
-        prevButton.disabled = currentPage === 1;
-        prevButton.addEventListener("click", () => {
-          if (currentPage > 1) {
-            currentPage--;
-            renderThumbs();
-          }
-        });
-        paginationContainer.appendChild(prevButton);
-
-        for (let i = 1; i <= totalPages; i++) {
-          const button = document.createElement("button");
-          button.textContent = i;
-          button.className = i === currentPage ? "active" : "";
-          button.addEventListener("click", () => {
-            currentPage = i;
-            renderThumbs();
-          });
-          paginationContainer.appendChild(button);
+      // Update the main title and filter content
+      const updateTitle = (newCategory) => {
+        const mainTitle = document.getElementById("main-title");
+        if (mainTitle) {
+          mainTitle.textContent = newCategory; // Update title content
         }
-
-        const nextButton = document.createElement("button");
-        nextButton.textContent = "Next";
-        nextButton.disabled = currentPage === totalPages;
-        nextButton.addEventListener("click", () => {
-          if (currentPage < totalPages) {
-            currentPage++;
-            renderThumbs();
-          }
-        });
-        paginationContainer.appendChild(nextButton);
+        currentCategoryFilter = newCategory; // Update category filter
+        currentPage = 1; // Reset to the first page
+        renderThumbs(); // Re-render thumbnails
       };
 
-      // 搜索功能
+      // Search functionality
       const searchFunction = () => {
         const input = document.getElementById("searchInput");
         const filter = input.value.toUpperCase();
         const filteredThumbs = thumbs.filter((thumb) =>
           thumb.title.toUpperCase().includes(filter)
         );
-        currentPage = 1; // 重置到第一页
-        renderThumbsFromArray(filteredThumbs);
+        currentPage = 1; // Reset to the first page
+        renderThumbsFromArray(filteredThumbs); // Render filtered thumbnails
       };
 
-      // 渲染过滤后的 Thumb 数据
-      const renderThumbsFromArray = (filteredThumbs) => {
-        const container = document.getElementById("thumb-container");
-        container.innerHTML = ""; // 清空容器
-
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const paginatedThumbs = filteredThumbs.slice(startIndex, endIndex);
-
-        paginatedThumbs.forEach((thumb) => {
-          const thumbHTML = `
-          <div class="thumb" data-title="${thumb.title}" data-category="${
-            thumb.category
-          }">
-
-                <img data-src="${
-                  thumb.image
-                }" alt="poster" class="lazy-image" />
-                <article class="description">
-                  <h3 id="filmtitle">${thumb.title}</h3>
-                  <div class="stars">${generateStars(thumb.rating)}</div>
-                </article>
-
-          </div>
-        `;
-          container.innerHTML += thumbHTML;
-        });
-
-        renderPagination(filteredThumbs.length);
-      };
-
-      // 渲染分类过滤器
+      // 5. Rendering Filters
       const renderGenreFilter = () => {
         const genreContainer = document.getElementById(
           "genre-filter-container"
         );
         const genreList = document.getElementById("genre-filter");
 
-        // 清空之前的分类选项
-        genreList.innerHTML = "";
+        genreList.innerHTML = ""; // Clear previous genre options
 
-        // 动态生成分类选项
         genres.forEach((genre) => {
           const genreItem = document.createElement("li");
           genreItem.innerHTML = `<a href="#" onclick="filterGenre('${genre}', this)">${genre}</a>`;
           genreList.appendChild(genreItem);
         });
 
-        // 显示分类容器
-        genreContainer.style.display = "block";
+        genreContainer.style.display = "block"; // Show the genre filter container
       };
 
-      // 初始渲染所有 Thumbs
-      document.addEventListener("DOMContentLoaded", () => {
-        renderThumbs(); // 页面加载时显示所有内容
-      });
+      const renderCountryFilter = () => {
+        const countryContainer = document.getElementById(
+          "country-filter-container"
+        );
+        const countryList = document.getElementById("country-filter");
 
-      document.addEventListener("DOMContentLoaded", () => {
-        // 保持 Watchlist 链接的 active 状态
-        const watchlistLink = document.getElementById("watchlist-link");
-        if (watchlistLink) {
-          watchlistLink.classList.add("active");
-        }
-      });
+        countryList.innerHTML = ""; // Clear previous country options
 
-      // 更新标题并过滤内容
-      const updateTitle = (newCategory) => {
-        const mainTitle = document.getElementById("main-title");
-        if (mainTitle) {
-          mainTitle.textContent = newCategory; // 更新标题内容
-        }
-        currentCategoryFilter = newCategory; // 更新分类过滤条件
-        currentPage = 1; // 重置到第一页
-        renderThumbs(); // 重新渲染
-      };
-
-      // 过滤 Thumb 数据
-      const filterThumbs = (category) => {
-        currentPage = 1; // 重置到第一页
-        renderThumbs(category);
-      };
-
-      const filterCategory = (type, element) => {
-        // 移除所有选项的 active 类
-        document.querySelectorAll(".sub-menu li a").forEach((link) => {
-          link.classList.remove("active");
+        countries.forEach((country) => {
+          const countryItem = document.createElement("li");
+          countryItem.innerHTML = `<a href="#" onclick="filterCountry('${country}', this)">${country}</a>`;
+          countryList.appendChild(countryItem);
         });
 
-        // 为当前选中的选项添加 active 类
-        element.classList.add("active");
-
-        currentTypeFilter = type; // 更新类型过滤条件
-        currentPage = 1; // 重置到第一页
-
-        renderCountryFilter(); // 显示国家选项
-        renderGenreFilter(); // 显示分类选项
-        renderThumbs(); // 重新渲染
+        countryContainer.style.display = "block"; // Show the country filter container
       };
-
-      function flipCard(element) {
-        // 获取父级 film-card 容器
-        const card = element.closest(".film-card");
-        // 切换 flipped 类
-        card.classList.toggle("flipped");
-      }
-
-      // 确保事件绑定正确
-      document.addEventListener("DOMContentLoaded", function () {
-        const hamburger = document.getElementById("hamburger");
-        if (hamburger) {
-          hamburger.addEventListener("click", function (e) {
-            e.stopPropagation(); // 防止事件冒泡
-            toggleMenu();
-          });
-        }
-      });
-
-      function toggleMenu() {
-        const navbar = document.getElementById("main-nav");
-        if (navbar) {
-          navbar.classList.toggle("show");
-        }
-      }
     </script>
   </head>
 
+  <!-- HTML -->
   <body id="screen">
     <!-- Header -->
     <header>
