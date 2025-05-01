@@ -654,7 +654,7 @@ footer a:hover {
     display: none;
   }
   #main-nav.show {
-    display: block ;
+    display: block;
   }
 
   .mobile-menu {
@@ -689,12 +689,42 @@ footer a:hover {
     text-align: left;
     width: 100%;
     margin: 0;
-    padding: 14px;
+    padding: 7px;
   }
   .sub-nav input[type="text"] {
     border: 1px solid #ccc;
   }
 
+  .sub-menu {
+    padding: 0;
+  }
+
+  .sub-menu li a {
+    margin: 7px;
+    padding: 4px !important;
+  }
+
+  .search-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    margin: 1rem 0;
+  }
+
+  #sub-nav input[type="text"] {
+    width: 60%;
+    margin: 0 7px;
+    padding: 10px;
+    font-size: 1rem;
+  }
+
+  #sub-nav button {
+    width: 30%;
+    padding: 10px;
+    font-size: 1rem;
+    align-items: center;
+  }
   .container {
     flex-direction: column;
     width: 90% !important;
@@ -703,7 +733,7 @@ footer a:hover {
   .thumb {
     aspect-ratio: 5/7;
     width: 90%;
-    max-width:100%;
+    max-width: 100%;
   }
 
   .thumb .content-row {
