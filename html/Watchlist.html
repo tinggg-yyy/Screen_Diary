@@ -9,600 +9,627 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
-    <script type="text/javascript" src="../js/Watchlist.js" defer></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
     <script>
       let currentPage = 1; // 当前页码
       const itemsPerPage = 12; // 每页显示的 thumb 数量
+      let currentFilter = "ALL"; // 当前过滤条件
+      let currentCategoryFilter = "ALL"; // 当前的分类过滤条件
+      let currentTypeFilter = "ALL"; // 当前的类型过滤条件
+      let currentGenreFilter = "ALL"; // 当前的分类过滤条件
+      let currentCountryFilter = "ALL"; // 当前的国家过滤条件
+
+      const genres = [
+        "Thriller",
+        "Mystery",
+        "Romance",
+        "Action",
+        "Supernatural",
+        "Adventure",
+        "Comedy",
+        "Isekai",
+        "Fantasy",
+        "Life",
+        "Food",
+        "Detective",
+        "Dark",
+        "Sport",
+      ];
+
+      const countries = ["Japan", "US", "UK", "Korea"];
+
+      const filterGenre = (genre, element) => {
+        // 移除所有选项的 active 类
+        document.querySelectorAll("#genre-filter li a").forEach((link) => {
+          link.classList.remove("active");
+        });
+
+        // 为当前选中的选项添加 active 类
+        element.classList.add("active");
+
+        currentGenreFilter = genre; // 更新分类过滤条件
+        currentPage = 1; // 重置到第一页
+        renderThumbs(); // 重新渲染
+      };
+
+      const filterCountry = (country, element) => {
+        // 移除所有选项的 active 类
+        document.querySelectorAll("#country-filter li a").forEach((link) => {
+          link.classList.remove("active");
+        });
+
+        // 为当前选中的选项添加 active 类
+        element.classList.add("active");
+
+        currentCountryFilter = country; // 更新国家过滤条件
+        currentPage = 1; // 重置到第一页
+        renderThumbs(); // 重新渲染
+      };
+
+      const renderCountryFilter = () => {
+        const countryContainer = document.getElementById(
+          "country-filter-container"
+        );
+        const countryList = document.getElementById("country-filter");
+
+        // 清空之前的国家选项
+        countryList.innerHTML = "";
+
+        // 动态生成国家选项
+        countries.forEach((country) => {
+          const countryItem = document.createElement("li");
+          countryItem.innerHTML = `<a href="#" onclick="filterCountry('${country}', this)">${country}</a>`;
+          countryList.appendChild(countryItem);
+        });
+
+        // 显示国家容器
+        countryContainer.style.display = "block";
+      };
 
       // Thumb data array
       const thumbs = [
         {
-          title: "The White Lotus 1",
-          category: "WATCHED",
+          title: "The White Lotus",
+          type: "TV Series",
           genre: ["Comedy", "Drama", "Satire"],
           country: "US",
           rating: 5,
+          comment: "Loved the satire and character development.",
           image: "../img/whitelotus1.jpg",
         },
         {
           title: "The White Lotus 2",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Comedy", "Drama", "Satire"],
           country: "US",
-          rating: 4,
+          rating: 5,
+          comment: "Loved the satire and character development.",
           image: "../img/whitelotus2.jpg",
         },
         {
           title: "The White Lotus 3",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Comedy", "Drama", "Satire"],
           country: "US",
-          rating: 3,
+          rating: 5,
+          comment: "Loved the satire and character development.",
           image: "../img/whitelotus3.jpg",
         },
         {
           title: "Sakamoto Days",
           category: "WATCHING",
-          genre: [""],
+          type: "Animes",
+          genre: ["Action"],
           country: "Japan",
           rating: 4,
+          comment:
+            "A unique blend of action and comedy with a heartwarming story.",
           image: "../img/SakamotoDays.jpg",
         },
         {
           title: "Dandadan",
-          category: "TO-WATCH",
+          category: "WATCHED",
+          type: "Animes",
           country: "Japan",
-          genre: [""],
-          rating: 0,
+          genre: ["Action", "Comedy", "Supernatural", "Romance"],
+          rating: 5,
+          comment:
+            "A thrilling mix of action and supernatural elements with a touch of romance.",
           image: "../img/dandadan.jpg",
         },
         {
           title: "Delicious In Dungeon",
           category: "WATCHED",
-          genre: [""],
+          type: "Animes",
+          genre: ["Food", "Fantasy", "Comedy", "Adventure"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A delightful blend of food, fantasy, and adventure with a unique twist.",
           image: "../img/DeliciousInDungeon.jpg",
         },
         {
           title: "Jujutsu Kaisen",
           category: "WATCHED",
-          genre: [""],
+          type: "Animes",
+          genre: ["Dark", "Fantasy", "Supernatural", "Action"],
           country: "Japan",
           rating: 5,
+          comment:
+            "An intense and captivating blend of dark fantasy and supernatural action.",
           image: "../img/JujutsuKaisen.jpg",
         },
         {
           title: "Jujutsu Kaisen 2",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Dark", "Fantasy", "Supernatural", "Action"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
+          comment:
+            "An exciting sequel that expands on the original's themes and characters.",
           image: "../img/JujutsuKaisen2.jpg",
         },
         {
           title: "Demon Slayer: Kimetsu no Yaiba",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Dark", "Fantasy", "Supernatural", "Action", "Adventure"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A breathtaking journey through a dark fantasy world with stunning animation and compelling characters.",
           image: "../img/DemonSlayer.jpg",
         },
         {
           title: "Demon Slayer: Kimetsu no Yaiba - Mugen Train Arc",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Dark", "Fantasy", "Supernatural", "Action", "Adventure"],
           country: "Japan",
           rating: 5,
+          comment:
+            "An emotional and action-packed continuation of the Demon Slayer saga, set on a train filled with danger and intrigue.",
           image: "../img/DemonSlayertrain.jpg",
         },
         {
           title: "Demon Slayer: Kimetsu no Yaiba - Entertainment District Arc",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Dark", "Fantasy", "Supernatural", "Action", "Adventure"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A thrilling arc that delves into the dark underbelly of the entertainment district, filled with action and emotional depth.",
           image: "../img/DemonSlayerentertain.jpg",
         },
         {
           title: "Demon Slayer: Kimetsu no Yaiba - Swordsmith Village Arc",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Dark", "Fantasy", "Supernatural", "Action", "Adventure"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A captivating story that explores the origins of the swordsmiths and their crucial role in the Demon Slayer universe.",
           image: "../img/DemonSlayersword.jpg",
         },
         {
           title: "Demon Slayer: Kimetsu no Yaiba - Hashira Training Arc",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Dark", "Fantasy", "Supernatural", "Action", "Adventure"],
           country: "Japan",
           rating: 5,
+          comment:
+            "An intense training arc that showcases the growth and development of the Hashira, setting the stage for future battles.",
           image: "../img/DemonSlayertraining.jpg",
         },
         {
           title: "Haikyu!!",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Sport"],
           country: "Japan",
           rating: 5,
+          comment:
+            "An inspiring and thrilling sports anime that captures the essence of teamwork and determination.",
           image: "../img/Haikyu.jpg",
         },
         {
           title: "Reborn!",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Action", "Comedy", "Supernatural"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A thrilling story of rebirth and adventure, filled with action and supernatural elements.",
           image: "../img/reborn.jpg",
         },
         {
           title: "Solo Leveling",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Action", "Fantasy", "Adventure"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
+          comment:
+            "A visually stunning adaptation of the popular webtoon, but the pacing felt rushed.",
           image: "../img/sololeveling.jpg",
         },
         {
           title: "Kaiju No. 8",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Action", "Comedy", "Adventure"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
+          comment:
+            "A thrilling blend of action and comedy with a unique twist on the kaiju genre.",
           image: "../img/kaijiuno8.jpg",
         },
         {
           title: "Food Wars!: Shokugeki no Soma",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Food"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A culinary masterpiece that combines intense cooking battles with character development and humor.",
           image: "../img/Foodwars.jpg",
         },
         {
           title: "Food Wars!: Shokugeki no Soma: The Second Plate",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Food"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A culinary masterpiece that combines intense cooking battles with character development and humor.",
           image: "../img/foodwar2.jpg",
         },
         {
           title: "Food Wars!: Shokugeki no Soma: The Third Plate",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Food"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
+          comment:
+            "A thrilling continuation of the culinary battles with even higher stakes and more intense rivalries.",
           image: "../img/foodwar3.jpg",
         },
         {
           title: "Food Wars!: Shokugeki no Soma: The Fourth Plate",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Food"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
+          comment:
+            "A thrilling continuation of the culinary battles with even higher stakes and more intense rivalries.",
           image: "../img/foodwar4.jpg",
         },
         {
           title: "Food Wars!: Shokugeki no Soma: The Fifth Plate",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Food"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
+          comment:
+            "A thrilling continuation of the culinary battles with even higher stakes and more intense rivalries.",
           image: "../img/foodwar5.jpg",
         },
 
         {
           title: "Free!",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Sport"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A beautifully animated sports anime that captures the passion and dedication of competitive swimming.",
           image: "../img/Free!.jpg",
-        },
-        {
-          title: "Food Wars!: Shokugeki no Soma: The Second Plate",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/foodwar2.jpg",
-        },
-        {
-          title: "Food Wars!: Shokugeki no Soma: The Third Plate",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/foodwar3.jpg",
-        },
-        {
-          title: "Food Wars!: Shokugeki no Soma: The Fourth Plate",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/foodwar4.jpg",
-        },
-        {
-          title: "Food Wars!: Shokugeki no Soma: The Fifth Plate",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/foodwar5.jpg",
         },
 
         {
           title: "Himouto! Umaru-chan",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Life", "Comedy"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A hilarious and heartwarming slice-of-life comedy that explores the duality of a seemingly perfect",
           image: "../img/Himouto.jpg",
-        },
-        {
-          title: "Food Wars!: Shokugeki no Soma: The Second Plate",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/foodwar2.jpg",
-        },
-        {
-          title: "Food Wars!: Shokugeki no Soma: The Third Plate",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/foodwar3.jpg",
-        },
-        {
-          title: "Food Wars!: Shokugeki no Soma: The Fourth Plate",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/foodwar4.jpg",
-        },
-        {
-          title: "Food Wars!: Shokugeki no Soma: The Fifth Plate",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/foodwar5.jpg",
         },
 
         {
           title: "Himouto! Umaru-chan R",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Life", "Comedy"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A hilarious and heartwarming slice-of-life comedy that explores the duality of a seemingly perfect",
           image: "../img/Himouto!.jpg",
         },
         {
           title: "Miss Kobayashi's Dragon Maid",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Life", "Fantasy", "Comedy"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A delightful blend of fantasy and slice-of-life comedy with charming characters.",
           image: "../img/Dragonmaid.jpg",
-        },
-        {
-          title: "Food Wars!: Shokugeki no Soma: The Second Plate",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/foodwar2.jpg",
-        },
-        {
-          title: "Food Wars!: Shokugeki no Soma: The Third Plate",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/foodwar3.jpg",
-        },
-        {
-          title: "Food Wars!: Shokugeki no Soma: The Fourth Plate",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/foodwar4.jpg",
-        },
-        {
-          title: "Food Wars!: Shokugeki no Soma: The Fifth Plate",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/foodwar5.jpg",
         },
 
         {
-          title: "Himouto! Umaru-chan R",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/Himouto!.jpg",
-        },
-        ,
-        {
           title: "Miss Kobayashi's Dragon Maid 2",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Life", "Fantasy", "Comedy"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
+          comment:
+            "A delightful blend of fantasy and slice-of-life comedy with charming characters.",
           image: "../img/dragonmaid2.jpg",
-        },
-        {
-          title: "Haven't You Heard? I'm Sakamoto",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/sakamoto.jpg",
         },
         {
           title: "Toilet-bound Hanako-kun",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Supernatural", "Comedy", "Mystery"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A unique blend of supernatural elements and romance with a touch of mystery.",
           image: "../img/toilet.jpg",
         },
         {
           title: "Toilet-bound Hanako-kun 2",
           category: "TO-WATCH",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Supernatural", "Comedy", "Mystery"],
           country: "Japan",
           rating: 0,
+          comment:
+            "A hilarious and heartwarming slice-of-life comedy that explores the duality of a seemingly perfect",
           image: "../img/toilet2.jpg",
         },
         {
           title: "Eromanga Sensei",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Comedy"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
+          comment:
+            "A charming and humorous story that explores the complexities of sibling relationships and the world of light novel writing.",
           image: "../img/eromanga.jpg",
         },
         {
           title: "Mob Psycho 100",
           category: "TO-WATCH",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Action", "Comedy", "Fantasy"],
           country: "Japan",
           rating: 0,
+          comment:
+            "A unique blend of action and comedy with a heartwarming story.",
           image: "../img/mob.jpg",
-        },
-        {
-          title: "The Disastrous Life of Saiki K.",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/saiki.jpg",
-        },
-        {
-          title: "Food Wars!: Shokugeki no Soma: The Second Plate",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/foodwar2.jpg",
-        },
-        {
-          title: "Food Wars!: Shokugeki no Soma: The Third Plate",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/foodwar3.jpg",
-        },
-        {
-          title: "Food Wars!: Shokugeki no Soma: The Fourth Plate",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/foodwar4.jpg",
-        },
-        {
-          title: "Food Wars!: Shokugeki no Soma: The Fifth Plate",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/foodwar5.jpg",
-        },
-
-        {
-          title: "Himouto! Umaru-chan R",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/Himouto!.jpg",
-        },
-        ,
-        {
-          title: "Miss Kobayashi's Dragon Maid 2",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/dragonmaid2.jpg",
         },
         {
           title: "Haven't You Heard? I'm Sakamoto",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Comedy", "Life"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A hilarious and heartwarming slice-of-life comedy that explores the duality of a seemingly perfect",
           image: "../img/sakamoto.jpg",
-        },
-        {
-          title: "Toilet-bound Hanako-kun",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/toilet.jpg",
-        },
-        {
-          title: "Toilet-bound Hanako-kun 2",
-          category: "TO-WATCH",
-          genre: ["  "],
-          country: "Japan",
-          rating: 0,
-          image: "../img/toilet2.jpg",
-        },
-        {
-          title: "Eromanga Sensei",
-          category: "WATCHED",
-          genre: ["  "],
-          country: "Japan",
-          rating: 5,
-          image: "../img/eromanga.jpg",
         },
         {
           title: "The Disastrous Life of Saiki K.",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Comedy", "Supernatural", "Life"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A hilarious and heartwarming slice-of-life comedy that explores the duality of a seemingly perfect",
           image: "../img/saiki.jpg",
         },
         {
           title: "The Disastrous Life of Saiki K. 2",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Comedy", "Supernatural", "Life"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A hilarious and heartwarming slice-of-life comedy that explores the duality of a seemingly perfect",
           image: "../img/saiki2.jpg",
         },
         {
           title: "The Disastrous Life of Saiki K. Reawakened",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Comedy", "Supernatural", "Life"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A hilarious and heartwarming slice-of-life comedy that explores the duality of a seemingly perfect",
           image: "../img/saikire.jpg",
         },
         {
           title: "Hori san to Miyamura kun",
           category: "WATCHED",
+          type: "Animes",
           genre: ["  "],
           country: "Japan",
           rating: 5,
+          comment:
+            "A charming and heartwarming story that explores the complexities of sibling relationships and the world of light novel writing.",
           image: "../img/kuyugongcun.jpg",
         },
         {
           title: "Hori san to Miyamura kun 2",
           category: "TO-WATCH",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance"],
           country: "Japan",
           rating: 0,
+          comment:
+            "A charming and heartwarming story that explores the complexities of sibling relationships and the world of light novel writing.",
           image: "../img/kuyugongcun2.jpg",
         },
         {
           title: "Kawaii dake ja Nai Shikimori-san",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
+          comment:
+            "A charming and heartwarming story that explores the complexities of sibling relationships and the world of light novel writing.",
           image: "../img/shishou.jpg",
         },
         {
           title: "Teasing Master Takagi-san",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Life"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A charming and heartwarming story that explores the complexities of sibling relationships and the world of light novel writing.",
           image: "../img/teasing.jpg",
         },
         {
           title: "Teasing Master Takagi-san 2",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Romance", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
+          comment:
+            "A charming and heartwarming story that explores the complexities of sibling relationships and the world of light novel writing.",
           image: "../img/teasing2.jpg",
         },
         {
           title: "Teasing Master Takagi-san 3",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Romance", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
+          comment:
+            "A charming and heartwarming story that explores the complexities of sibling relationships and the world of light novel writing.",
           image: "../img/teasing3.jpg",
         },
         {
           title: "Teasing Master Takagi-san Movie",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Romance", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
+          comment:
+            "A charming and heartwarming story that explores the complexities of sibling relationships and the world of light novel writing.",
           image: "../img/teasingmovie.jpg",
         },
         {
           title: "My Bride is a Mermaid",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Harem"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
+          comment:
+            "A hilarious and heartwarming story that explores the complexities of sibling relationships and the world of light novel writing.",
           image: "../img/mermaid.jpg",
         },
         {
           title: "Tsuredure Children",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
+          comment:
+            "A charming and heartwarming story that explores the complexities of sibling relationships and the world of light novel writing.",
           image: "../img/tsuredure.jpg",
         },
         {
           title: "Rascal Does Not Dream",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
+          comment:
+            "A charming and heartwarming story that explores the complexities of sibling relationships and the world of light novel writing.",
           image: "../img/rascal.jpg",
         },
         {
           title: "Science Fell in Love, So I Tried to Prove It",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
+          comment:
+            "A charming and heartwarming story that explores the complexities of sibling relationships and the world of light novel writing.",
           image: "../img/science.jpg",
         },
         {
           title: "Science Fell in Love, So I Tried to Prove It 2",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
+          comment:
+            "A charming and heartwarming story that explores the complexities of sibling relationships and the world of light novel writing.",
           image: "../img/science2.jpg",
         },
         {
           title: "Kaguya-sama: Love Is War",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Life", "Comedy"],
           country: "Japan",
           rating: 5,
+          comment:
+            "A hilarious and heartwarming story that explores the complexities of sibling relationships and the world of light novel writing.",
           image: "../img/lovewar.jpg",
         },
         {
           title: "Kaguya-sama: Love Is War 2",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Life", "Comedy"],
           country: "Japan",
           rating: 5,
           image: "../img/lovewar2.jpg",
@@ -610,7 +637,8 @@
         {
           title: "Kaguya-sama: Love Is War - Ultra Romantic",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Life", "Comedy"],
           country: "Japan",
           rating: 5,
           image: "../img/lovewar3.jpg",
@@ -618,7 +646,8 @@
         {
           title: "Kaguya-sama: Love Is War - The First Kiss Never Ends",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Comedy"],
           country: "Japan",
           rating: 5,
           image: "../img/lovewarmovie.jpg",
@@ -627,7 +656,8 @@
           title:
             "Kaguya-sama: Love Is War - The First Kiss Never Ends (Live Action)",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Comedy"],
           country: "Japan",
           rating: 1,
           image: "../img/lovewarmovielive.jpg",
@@ -635,16 +665,18 @@
         {
           title: "Aharen-san wa Hakarenai",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Comedy"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/Aharen-san.jpg",
         },
         {
           title:
             "I'm Giving the Disgraced Noble Lady I Rescued a Crash Course in Naughtiness",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Fantasy", "Romance"],
           country: "Japan",
           rating: 3,
           image: "../img/giving.jpg",
@@ -652,6 +684,8 @@
         {
           title: "Tamako Love Story",
           category: "WATCHED",
+          type: "Animes",
+          genre: ["Romance"],
           country: "Japan",
           rating: 5,
           image: "../img/tamako.jpg",
@@ -659,7 +693,8 @@
         {
           title: "Tamako Market",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Life", "Comedy"],
           country: "Japan",
           rating: 5,
           image: "../img/tamakomarket.jpg",
@@ -667,7 +702,8 @@
         {
           title: "Your Lie in April",
           category: "TO-WATCH",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance"],
           country: "Japan",
           rating: 0,
           image: "../img/lieinapril.jpg",
@@ -675,15 +711,17 @@
         {
           title: "Romantic Killer",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Comedy"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/romantickiller.jpg",
         },
         {
           title: "Komi Can't Communicate",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/komi.jpg",
@@ -691,15 +729,17 @@
         {
           title: "Problem Children Are Coming from Another World, Aren't They?",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Fantasy", "Action", "Comedy", "Isekai"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
           image: "../img/problem.jpg",
         },
         {
           title: "NO GAME NO LIFE",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Fantasy", "Adventure", "Comedy", "Isekai"],
           country: "Japan",
           rating: 5,
           image: "../img/game.jpg",
@@ -707,39 +747,44 @@
         {
           title: "NO GAME NO LIFE: ZERO",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Fantasy", "Adventure", "Comedy", "Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/game0.jpg",
         },
         {
           title: "Re:Zero - Starting Life in Another World",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Adventure", "Dark", "Fantasy", "Romance", "Isekai"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/re.jpg",
         },
         {
           title: "Re:Zero - Starting Life in Another World 2",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Adventure", "Dark", "Fantasy", "Romance", "Isekai"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/re2.jpg",
         },
         {
           title: "Re:Zero - Starting Life in Another World 3",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Adventure", "Dark", "Fantasy", "Romance", "Isekai"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/re3.jpg",
         },
         {
           title: "That Time I Got Reincarnated as a Slime",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Adventure", "Fantasy", "Comedy", "Isekai"],
           country: "Japan",
           rating: 5,
           image: "../img/slime.jpg",
@@ -747,23 +792,26 @@
         {
           title: "That Time I Got Reincarnated as a Slime 2",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Adventure", "Fantasy", "Comedy", "Isekai"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
           image: "../img/slime2.jpg",
         },
         {
           title: "That Time I Got Reincarnated as a Slime 3",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Adventure", "Fantasy", "Comedy", "Isekai"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
           image: "../img/slime3.jpg",
         },
         {
           title: "So I'm a Spider, So What?",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Adventure", "Fantasy", "Comedy", "Isekai"],
           country: "Japan",
           rating: 5,
           image: "../img/spider.jpg",
@@ -771,15 +819,17 @@
         {
           title: "Uncle from Another World",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Adventure", "Fantasy", "Comedy", "Isekai"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
           image: "../img/uncle.jpg",
         },
         {
           title: "Mashle: Magic and Muscles",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Action", "Fantasy", "Comedy"],
           country: "Japan",
           rating: 5,
           image: "../img/mashle.jpg",
@@ -787,23 +837,26 @@
         {
           title: "Mashle: Magic and Muscles 2",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Action", "Fantasy", "Comedy"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/mashle2.jpg",
         },
         {
           title: "The Strongest Sage with the Weakest Crest",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Action", "Fantasy"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
           image: "../img/sage.jpg",
         },
         {
           title: "My Next Life as a Villainess: All Routes Lead to Doom!",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Isekai", "Comedy"],
           country: "Japan",
           rating: 5,
           image: "../img/villainess.jpg",
@@ -811,23 +864,26 @@
         {
           title: "My Next Life as a Villainess: All Routes Lead to Doom! 2",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Isekai", "Comedy"],
           country: "Japan",
           rating: 5,
           image: "../img/villainess2.jpg",
         },
         {
           title: "My Next Life as a Villainess: All Routes Lead to Doom! Movie",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Romance", "Isekai", "Comedy"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/villainessmovie.jpg",
         },
         {
           title: "Welcome to Demon School! Iruma-kun",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Comedy", "Supernatural", "Isekai", "Action"],
           country: "Japan",
           rating: 5,
           image: "../img/demon.jpg",
@@ -835,63 +891,71 @@
         {
           title: "Welcome to Demon School! Iruma-kun 2",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Comedy", "Supernatural", "Isekai", "Action"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/demon2.jpg",
         },
         {
           title: "Welcome to Demon School! Iruma-kun 3",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Comedy", "Supernatural", "Isekai", "Action"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/demon3.jpg",
         },
         {
           title: "Kemono Jihen",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Dark", "Fantasy", "Mystery", "Supernatural"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/kemono.jpg",
         },
         {
           title: "The Morose Mononokean",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Comedy", "Supernatural"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
           image: "../img/morose.jpg",
         },
         {
           title: "Talentless Nana",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Thriller", "Mystery", "Supernatural"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/munou.jpg",
         },
         {
           title: "Kiitaro's Yokai Picture Diary",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Fantasy"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
           image: "../img/kiitaro.jpg",
         },
         {
           title: "A Certain Scientific Accelerator",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Supernatural", "Action"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
           image: "../img/accelerator.jpg",
         },
         {
           title: "A Certain Scientific Railgun",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Supernatural", "Action", "Comedy"],
           country: "Japan",
           rating: 5,
           image: "../img/railgun.jpg",
@@ -899,31 +963,35 @@
         {
           title: "A Certain Scientific Railgun S",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Supernatural", "Action", "Comedy"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/railguns.jpg",
         },
         {
           title: "A Certain Scientific Railgun T",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Supernatural", "Action", "Comedy"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
           image: "../img/railgunt.jpg",
         },
         {
           title: "I'm the Villainess, So I'm Taming the Final Boss",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Fantasy", "Romance", "Isekai"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/taming.jpg",
         },
         {
           title: "Bofuri: I Don't Want to Get Hurt, So I'll Max Out My Defense",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Action", "Adventure", "Fantasy"],
           country: "Japan",
           rating: 5,
           image: "../img/bofuri.jpg",
@@ -932,7 +1000,8 @@
           title:
             "Bofuri: I Don't Want to Get Hurt, So I'll Max Out My Defense 2",
           category: "TO-WATCH",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Action", "Adventure", "Fantasy"],
           country: "Japan",
           rating: 0,
           image: "../img/bofuri2.jpg",
@@ -940,31 +1009,35 @@
         {
           title: "The Hero Is Overpowered but Overly Cautious",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Isekai", "Comedy", "Action"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/cautious.jpg",
         },
         {
           title: "In/Spectre",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Mystery", "Supernatural"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/spectre.jpg",
         },
         {
           title: "In/Spectre 2",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Mystery", "Supernatural"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
           image: "../img/spectre2.jpg",
         },
         {
           title: "Detective Conan",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conan.jpg",
@@ -972,7 +1045,8 @@
         {
           title: "Detective Conan: The Time Bombed Skyscraper",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanbomb.jpg",
@@ -980,7 +1054,8 @@
         {
           title: "Detective Conan: The Fourteenth Target",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conan14.jpg",
@@ -988,7 +1063,8 @@
         {
           title: "Detective Conan: The Last Wizard of the Century",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanwizard.jpg",
@@ -996,7 +1072,8 @@
         {
           title: "Detective Conan: Captured in Her Eyes",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conaneye.jpg",
@@ -1004,7 +1081,8 @@
         {
           title: "Detective Conan: Countdown to Heaven",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanheaven.jpg",
@@ -1012,7 +1090,8 @@
         {
           title: "Detective Conan: The Phantom of Baker Street",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanbaker.jpg",
@@ -1020,7 +1099,8 @@
         {
           title: "Detective Conan: Crossroad in the Ancient Capital",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conancross.jpg",
@@ -1028,7 +1108,8 @@
         {
           title: "Detective Conan: Magician of the Silver Sky",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conansilver.jpg",
@@ -1036,7 +1117,8 @@
         {
           title: "Detective Conan: Strategy Above the Depths",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanstrategy.jpg",
@@ -1044,7 +1126,8 @@
         {
           title: "Detective Conan: The Private Eyes' Requiem",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanprivate.jpg",
@@ -1052,7 +1135,8 @@
         {
           title: "Detective Conan: Jolly Roger in the Deep Azure",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanjolly.jpg",
@@ -1060,7 +1144,8 @@
         {
           title: "Detective Conan: Full Score of Fear",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanfear.jpg",
@@ -1068,7 +1153,8 @@
         {
           title: "Detective Conan: The Raven Chaser",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanraven.jpg",
@@ -1076,7 +1162,8 @@
         {
           title: "Detective Conan: The Lost Ship in the Sky",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanship.jpg",
@@ -1084,7 +1171,8 @@
         {
           title: "Detective Conan: Quarter of Silence",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanquarter.jpg",
@@ -1092,7 +1180,8 @@
         {
           title: "Detective Conan: The Eleventh Striker",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conan11.jpg",
@@ -1100,7 +1189,8 @@
         {
           title: "Detective Conan: Private Eye in the Distant Sea",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conansea.jpg",
@@ -1108,7 +1198,8 @@
         {
           title: "Lupin III vs. Conan",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanlupin.jpg",
@@ -1116,7 +1207,8 @@
         {
           title: "Detective Conan: The Sniper from Another Dimension",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conansniper.jpg",
@@ -1125,7 +1217,8 @@
           title:
             "Detective Conan: Missing Conan Edogawa Case - His History's Worst Two Days",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanmiss.jpg",
@@ -1133,7 +1226,8 @@
         {
           title: "Detective Conan: Sunflowers of Inferno",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conansunflower.jpg",
@@ -1141,7 +1235,8 @@
         {
           title: "Detective Conan: The Darkest Nightmare",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conannightmare.jpg",
@@ -1149,7 +1244,8 @@
         {
           title: "Detective Conan: Episode One",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conan1.jpg",
@@ -1157,7 +1253,8 @@
         {
           title: "Detective Conan: The Crimson Love Letter",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanlove.jpg",
@@ -1165,7 +1262,8 @@
         {
           title: "Detective Conan: Zero the Enforcer",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conan0.jpg",
@@ -1173,7 +1271,8 @@
         {
           title: "Detective Conan: The Fist of Blue Sapphire",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanblue.jpg",
@@ -1181,7 +1280,8 @@
         {
           title: "Detective Conan: The Scarlet Alibi",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanscarlet.jpg",
@@ -1189,7 +1289,8 @@
         {
           title: "Detective Conan: The Scarlet Bullet",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanbullet.jpg",
@@ -1197,31 +1298,35 @@
         {
           title: "Detective Conan: The Bride of Halloween",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conanhalloween.jpg",
         },
         {
           title: "Detective Conan: Black Iron Submarine",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/conanblack.jpg",
         },
         {
           title: "Detective Conan: The Million-dollar Pentagram",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/conanmillion.jpg",
         },
         {
           title: "Detective Conan: The Culprit Hanzawa",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Detective", "Thriller", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/conancul.jpg",
@@ -1229,15 +1334,17 @@
         {
           title: "Kaito Kuroba",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Mystery", "Comedy", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/kaito.jpg",
         },
         {
           title: "Danganronpa",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Mystery", "Thriller"],
           country: "Japan",
           rating: 5,
           image: "../img/danganronpa.jpg",
@@ -1245,7 +1352,8 @@
         {
           title: "Danganronpa 2.5: Nagito Komaeda and the World Vanquisher",
           category: "WATCHED",
-          genre: ["  "],
+          type: ["Animes", "Movies"],
+          genre: ["Mystery", "Thriller"],
           country: "Japan",
           rating: 5,
           image: "../img/danganronpa2.5.jpg",
@@ -1254,7 +1362,8 @@
           title:
             "Danganronpa 3: The End of Hope's Peak High School - Future Arc",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Mystery", "Thriller"],
           country: "Japan",
           rating: 5,
           image: "../img/danganronpa3f.jpg",
@@ -1263,63 +1372,71 @@
           title:
             "Danganronpa 3: The End of Hope's Peak High School - Despair Arc",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Mystery", "Thriller"],
           country: "Japan",
           rating: 5,
           image: "../img/danganronpa3d.jpg",
         },
         {
           title: "Classic Literature Club",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Mystery", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/classic.jpg",
         },
         {
           title: "Kakegurui",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Mystery", "Thriller"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/kakegurui.jpg",
         },
         {
           title: "Kakegurui 2",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Mystery", "Thriller"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/kakegurui2.jpg",
         },
         {
           title: "Kakegurui Twin",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Mystery", "Thriller"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/kakeguruitwin.jpg",
         },
         {
-          title: "Kakegurui Twin Live-Action",
+          title: "Kakegurui Live-Action",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Mystery", "Thriller"],
           country: "Japan",
-          rating: 5,
+          rating: 1,
           image: "../img/kakeguruilive.jpg",
         },
         {
           title: "Junji Itô: Korekushon",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Horror"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/junjiito.jpg",
         },
         {
           title: "Black Butler",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Mystery", "Thriller", "Fantasy", "Dark"],
           country: "Japan",
           rating: 5,
           image: "../img/butler.jpg",
@@ -1327,111 +1444,125 @@
         {
           title: "Black Butler II",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Mystery", "Thriller", "Fantasy", "Dark"],
           country: "Japan",
           rating: 5,
           image: "../img/butler2.jpg",
         },
         {
           title: "Black Butler: Book of Circus",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Mystery", "Thriller", "Fantasy", "Dark"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/butlercircus.jpg",
         },
         {
           title: "Black Butler: Public School Arc",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Mystery", "Thriller", "Fantasy", "Dark"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/butlerpublic.jpg",
         },
         {
           title: "Black Butler: Emerald Witch Arc",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Mystery", "Thriller", "Fantasy", "Dark"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/butlerwitch.jpg",
         },
         {
           title: "Black Butler: Book of Murder",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Mystery", "Thriller", "Fantasy", "Dark"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/butlermurder.jpg",
         },
         {
           title: "Black Butler: Book of the Atlantic",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Mystery", "Thriller", "Fantasy", "Dark"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/butleratlantic.jpg",
         },
         {
           title: "Dr.Stone",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Adventure"],
           country: "Japan",
           rating: 5,
           image: "../img/drstone.jpg",
         },
         {
           title: "Dr.Stone 2",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Adventure"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/drstone2.jpg",
         },
         {
           title: "K-On!",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/kon.jpg",
         },
         {
           title: "K-On! 2",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Comedy", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/kon2.jpg",
         },
         {
           title: "K-On! Movie",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: ["Animes", "Movies"],
+          genre: ["Comedy", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/konmovie.jpg",
         },
         {
           title: "Anohana: The Flower We Saw That Day",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Supernatural", "Dark", "Mystery", "Romance"],
           country: "Japan",
           rating: 5,
           image: "../img/anohana.jpg",
         },
         {
           title: "Anohana The Movie: The Flower We Saw That Day",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: ["Animes", "Movies"],
+          genre: ["Supernatural", "Dark", "Mystery", "Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/anohanamovie.jpg",
         },
         {
           title: "Skip and Loafer",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Romance", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/skip.jpg",
@@ -1439,15 +1570,17 @@
         {
           title: "Date A Live",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Harem", "Romance", "Fantasy"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/date.jpg",
         },
         {
           title: "Puella Magi Madoka Magica",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Dark", "Fantasy", "Mystery", "Thriller"],
           country: "Japan",
           rating: 5,
           image: "../img/puella.jpg",
@@ -1455,47 +1588,53 @@
         {
           title: "School Babysitters",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Life"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/babysit.jpg",
         },
         {
           title: "Hell Girl",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Dark", "Supernatural", "Thriller"],
           country: "Japan",
           rating: 5,
           image: "../img/hellgirl.jpg",
         },
         {
           title: "Hell Girl: Two Mirrors",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "WATCHING",
+          type: "Animes",
+          genre: ["Dark", "Supernatural", "Thriller"],
           country: "Japan",
           rating: 5,
           image: "../img/hellgirl2.jpg",
         },
         {
           title: "Hell Girl: Three Vessels",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Dark", "Supernatural", "Thriller"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/hellgirl3.jpg",
         },
         {
           title: "Hell Girl: Fourth Twilight",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "TO-WATCH",
+          type: "Animes",
+          genre: ["Dark", "Supernatural", "Thriller"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/hellgirl4.jpg",
         },
         {
           title: "Cells at Work!",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Fantasy", "Comedy", "Action", "Adventure"],
           country: "Japan",
           rating: 5,
           image: "../img/cell.jpg",
@@ -1503,31 +1642,35 @@
         {
           title: "Cells at Work! 2",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Fantasy", "Comedy", "Action", "Adventure"],
           country: "Japan",
           rating: 5,
           image: "../img/cell2.jpg",
         },
         {
           title: "Cells at Work!: BLACK",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "WATCHING",
+          type: "Animes",
+          genre: ["Fantasy", "Comedy", "Action", "Adventure"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/cellblack.jpg",
         },
         {
           title: "Ranking of Kings",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "WATCHING",
+          type: "Animes",
+          genre: ["Action", "Adventure", "Comedy"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/rank.jpg",
         },
         {
           title: "Summer Time Rendering",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Mystery", "Supernatural"],
           country: "Japan",
           rating: 5,
           image: "../img/summer.jpg",
@@ -1535,7 +1678,8 @@
         {
           title: "Spy x Family",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Action", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/spy.jpg",
@@ -1543,7 +1687,8 @@
         {
           title: "Spy x Family 2",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Action", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/spy2.jpg",
@@ -1551,7 +1696,8 @@
         {
           title: "Spy x Family Code: White",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Action", "Comedy", "Life"],
           country: "Japan",
           rating: 5,
           image: "../img/spymovie.jpg",
@@ -1559,63 +1705,71 @@
         {
           title: "Migi & Dali",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Comedy", "Mystery", "Thriller"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/migidali.jpg",
         },
         {
           title: "Life Lessons with Uramichi Oniisan",
-          category: "WATCHED",
-          genre: ["  "],
+          category: "WATCHING",
+          type: "Animes",
+          genre: ["Comedy", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
           image: "../img/lifelesson.jpg",
         },
         {
           title: "How to Keep a Mummy",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Life", "Supernatural"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/mummy.jpg",
         },
         {
           title: "Love Is Like a Cocktail",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Comedy", "Food", "Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
           image: "../img/cocktail.jpg",
         },
         {
           title: "The Way of the Househusband",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Comedy", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/househusband.jpg",
         },
         {
           title: "Kotaro Lives Alone",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Life"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/kotaro.jpg",
         },
         {
           title: "Corpse Party",
           category: "WATCHED",
-          genre: ["  ", "Horror"],
+          type: "Animes",
+          genre: ["Horror"],
           country: "Japan",
-          rating: 5,
+          rating: 2,
           image: "../img/corpse.jpg",
         },
         {
           title: "BEASTARS",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Fantasy", "Dark", "Romance", "Thriller", "Mystery"],
           country: "Japan",
           rating: 5,
           image: "../img/beastar.jpg",
@@ -1623,32 +1777,37 @@
         {
           title: "BEASTARS 2",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          type: "Animes",
+          genre: ["Fantasy", "Dark", "Romance", "Thriller", "Mystery"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/beastar2.jpg",
         },
 
         {
           title: "BEASTARS 3",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Fantasy", "Dark", "Romance", "Thriller", "Mystery"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/beastar3.jpg",
         },
         {
           title: "Babanba Banban Vampire",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["BL", "Romance", "Comedy", "Fantasy"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/vampire.jpg",
         },
         {
           title: "Shugo Chara!",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Comedy", "Fantasy"],
           country: "Japan",
           rating: 5,
           image: "../img/shugo.jpg",
@@ -1656,15 +1815,17 @@
         {
           title: "Mermaid Melody Pichi Pichi Pitch",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Comedy", "Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 2,
           image: "../img/melody.jpg",
         },
         {
           title: "Assassination Classroom",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Comedy", "Supernatural", "Action"],
           country: "Japan",
           rating: 5,
           image: "../img/assassination.jpg",
@@ -1672,7 +1833,8 @@
         {
           title: "Assassination Classroom 2",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Comedy", "Supernatural", "Action"],
           country: "Japan",
           rating: 5,
           image: "../img/assassination2.jpg",
@@ -1680,7 +1842,8 @@
         {
           title: "Hakumei and Mikochi",
           category: "WATCHED",
-          genre: ["  "],
+          type: "Animes",
+          genre: ["Life", "Fantasy"],
           country: "Japan",
           rating: 5,
           image: "../img/hakumei.jpg",
@@ -1688,6 +1851,7 @@
         {
           title: "Unnatural",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Medical", "Drama", "Mystery"],
           country: "Japan",
           rating: 5,
@@ -1696,14 +1860,16 @@
         {
           title: "Todome no seppun",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Supernatural", "Thriller", "Drama", "Mystery", "Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/todome.jpg",
         },
         {
           title: "Alice in Borderland",
           category: "WATCHED",
+          type: "TV Series",
           genre: [
             "Science Fiction",
             "Thriller",
@@ -1719,6 +1885,7 @@
         {
           title: "Alice in Borderland 2",
           category: "WATCHED",
+          type: "TV Series",
           genre: [
             "Science Fiction",
             "Thriller",
@@ -1728,12 +1895,13 @@
             "Survival",
           ],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/alice2.jpg",
         },
         {
           title: "Alice in Borderland 3",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "TV Series",
           genre: [
             "Science Fiction",
             "Thriller",
@@ -1743,28 +1911,31 @@
             "Survival",
           ],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/alice3.jpg",
         },
         {
           title: "Nevertheless: The Shapes of Love",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Romance", "Drama"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/neverj.jpg",
         },
         {
           title: "Nevertheless",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "TV Series",
           genre: ["Romance", "Drama"],
           country: "Korea",
-          rating: 5,
+          rating: 0,
           image: "../img/neverk.jpg",
         },
         {
           title: "My Love Mix-Up!",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Romance", "Drama", "LGBTQ"],
           country: "Japan",
           rating: 5,
@@ -1773,63 +1944,71 @@
         {
           title: "Detective Conan: Shinichi Kudo's Written Challenge",
           category: "WATCHED",
+          type: "Movies",
           genre: ["Detective", "Crime", "Thriller", "Mystery"],
           country: "Japan",
-          rating: 5,
+          rating: 2,
           image: "../img/conanwritten.jpg",
         },
         {
           title: "Detective Conan: Shinichi Kudo's Written Challenge",
           category: "WATCHED",
+          type: "Movies",
           genre: ["Detective", "Crime", "Thriller", "Mystery"],
           country: "Japan",
-          rating: 5,
+          rating: 2,
           image: "../img/conanwritten2.jpg",
         },
         {
           title: "Shinichi Kudo Returns! Showdown with the Black Organization",
           category: "WATCHED",
+          type: "Movies",
           genre: ["Detective", "Crime", "Thriller", "Mystery"],
           country: "Japan",
-          rating: 5,
+          rating: 2,
           image: "../img/conanreturn.jpg",
         },
         {
           title: "Detective Conan: Kyoto Shinsengumi Murder Case",
           category: "WATCHED",
+          type: "Movies",
           genre: ["Detective", "Crime", "Thriller", "Mystery"],
           country: "Japan",
-          rating: 5,
+          rating: 2,
           image: "../img/conankyoto.jpg",
         },
         {
           title:
             "Detective Conan: Shinichi Kudo's Written Challenge! The Mystery of the Legendary Strange Bird",
           category: "WATCHED",
+          type: "Movies",
           genre: ["Detective", "Crime", "Thriller", "Mystery"],
           country: "Japan",
-          rating: 5,
+          rating: 2,
           image: "../img/conanbird.jpg",
         },
         {
           title: "The Files of Young Kindaichi",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Detective", "Crime", "Thriller", "Mystery"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
           image: "../img/file.jpg",
         },
         {
           title: "Mr. Hiiragi's Homeroom",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Thriller", "Mystery"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
           image: "../img/hiiragi.jpg",
         },
         {
           title: "Your Turn to Kill",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Thriller", "Mystery"],
           country: "Japan",
           rating: 5,
@@ -1837,15 +2016,17 @@
         },
         {
           title: "Your Turn to Kill: The Movie",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "Movies",
           genre: ["Drama", "Thriller", "Mystery"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/turnkillmovie.png",
         },
         {
           title: "Legal High",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Thriller", "Mystery", "Comedy", "Legal"],
           country: "Japan",
           rating: 5,
@@ -1854,6 +2035,7 @@
         {
           title: "Legal High 2",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Thriller", "Mystery", "Comedy", "Legal"],
           country: "Japan",
           rating: 5,
@@ -1861,39 +2043,44 @@
         },
         {
           title: "Legal High Special",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "Movies",
           genre: ["Drama", "Thriller", "Mystery", "Comedy", "Legal"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/legalhsp.jpg",
         },
         {
           title: "Legal High Special 2",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "Movies",
           genre: ["Drama", "Thriller", "Mystery", "Comedy", "Legal"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/legalhsp2.jpg",
         },
         {
           title: "Erased",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "TV Series",
           genre: ["  ", "Drama", "Thriller", "Mystery"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/eraseda.jpg",
         },
         {
           title: "Erased",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Thriller", "Mystery"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/erased.jpg",
         },
         {
           title: "Death Note",
           category: "WATCHED",
+          type: "TV Series",
           genre: [
             "Drama",
             "Thriller",
@@ -1903,44 +2090,49 @@
             "Crime",
           ],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/deathnote.jpg",
         },
         {
           title: "Miss Sherlock",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Thriller", "Mystery", "Detective", "Crime"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/mssherlock.jpg",
         },
         {
           title: "From Five to Nine",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Romance", "Drama"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/5-9.jpg",
         },
         {
           title: "From Today, It's My Turn!!",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["School", "Comedy", "Drama", "Action"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/kyo.jpg",
         },
         {
           title: "From Today, It's My Turn!!: The Movie",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "Movies",
           genre: ["School", "Comedy", "Drama", "Action"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/myturn.jpg",
         },
         {
           title: "Silent",
-          category: "WATCHED",
+          category: "WATCHING",
+          type: "TV Series",
           genre: ["Drama", "Romance"],
           country: "Japan",
           rating: 5,
@@ -1949,38 +2141,43 @@
         {
           title: "Trillion Game",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/trillion.jpg",
         },
         {
           title: "Trillion Game Movie",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "Movies",
           genre: ["Drama"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/trillionmovie.jpg",
         },
         {
           title: "Pretty Proofreader",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/jimi.jpg",
         },
         {
           title: "Solitary Gourmet(2024)",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "Movies",
           genre: ["Food", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/gourmet24.jpg",
         },
         {
           title: "Solitary Gourmet",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Food", "Life"],
           country: "Japan",
           rating: 5,
@@ -1989,6 +2186,7 @@
         {
           title: "Solitary Gourmet 2",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Food", "Life"],
           country: "Japan",
           rating: 5,
@@ -1997,6 +2195,7 @@
         {
           title: "Solitary Gourmet 3",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Food", "Life"],
           country: "Japan",
           rating: 5,
@@ -2005,6 +2204,7 @@
         {
           title: "Solitary Gourmet 4",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Food", "Life"],
           country: "Japan",
           rating: 5,
@@ -2013,6 +2213,7 @@
         {
           title: "Solitary Gourmet 5",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Food", "Life"],
           country: "Japan",
           rating: 5,
@@ -2021,6 +2222,7 @@
         {
           title: "Solitary Gourmet 6",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Food", "Life"],
           country: "Japan",
           rating: 5,
@@ -2029,6 +2231,7 @@
         {
           title: "Solitary Gourmet 7",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Food", "Life"],
           country: "Japan",
           rating: 5,
@@ -2036,47 +2239,53 @@
         },
         {
           title: "Solitary Gourmet 8",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "TV Series",
           genre: ["Food", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/gourmet8.jpg",
         },
         {
           title: "Solitary Gourmet 9",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "TV Series",
           genre: ["Food", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/gourmet9.jpg",
         },
         {
           title: "Solitary Gourmet 10",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "TV Series",
           genre: ["Food", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/gourmet10.jpg",
         },
         {
           title: "Dear Sister",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
           image: "../img/dearsis.jpg",
         },
         {
           title: "Born To Be A Flower",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "TV Series",
           genre: ["Drama", "Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/bornflower.jpg",
         },
         {
           title: "Tales of the Unusual",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Horror", "Mystery"],
           country: "Japan",
           rating: 5,
@@ -2084,104 +2293,117 @@
         },
         {
           title: "Orange",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "Movies",
           genre: ["Drama", "Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/orange.jpg",
         },
         {
           title: "Wolf Girl and Black Prince",
           category: "WATCHED",
+          type: "Movies",
           genre: ["Drama", "Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 2,
           image: "../img/blackprince.jpg",
         },
         {
           title: "Psychic Kusuo",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Comedy", "Science Fiction", "Supernatural"],
           country: "Japan",
-          rating: 5,
+          rating: 3,
           image: "../img/psychic.jpg",
         },
         {
           title: "L.DK",
           category: "WATCHED",
+          type: "Movies",
           genre: ["Drama", "Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/L.DK.jpg",
         },
         {
           title: "L-DK: Two Loves, Under One Roof",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "Movies",
           genre: ["Drama", "Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/L.DK2.jpg",
         },
         {
           title: "Wotakoi: Love Is Hard for Otaku",
           category: "WATCHED",
+          type: "Animes",
           genre: ["Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 4,
           image: "../img/wotakoi.jpg",
         },
         {
           title: "We Married as a Job",
-          category: "WATCHED",
+          category: "WATCHING",
+          type: "TV Series",
           genre: ["Romance"],
           country: "Japan",
-          rating: 5,
+          rating: 2,
           image: "../img/marryjob.jpg",
         },
         {
           title: "Midnight Diner",
-          category: "WATCHED",
+          category: "WATCHING",
+          type: "TV Series",
           genre: ["Food", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/midnight.jpg",
         },
         {
           title: "Midnight Diner 2",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "TV Series",
           genre: ["Food", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/midnight2.jpg",
         },
         {
           title: "Midnight Diner 3",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "TV Series",
           genre: ["Food", "Life"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/midnight3.jpg",
         },
         {
           title: "Quartet",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "TV Series",
           genre: ["Drama"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/quartet.jpg",
         },
         {
           title: "The Great White Tower",
-          category: "WATCHED",
+          category: "TO-WATCH",
+          type: "TV Series",
           genre: ["Drama", "Medical"],
           country: "Japan",
-          rating: 5,
+          rating: 0,
           image: "../img/shiroi.jpg",
         },
         {
           title:
             "Cherry Magic! Thirty Years of Virginity Can Make You a Wizard?!",
           category: "TO-WATCH",
+          type: "TV Series",
           genre: ["Drama", "Romance", "LGBTQ"],
           country: "Japan",
           rating: 0,
@@ -2189,7 +2411,8 @@
         },
         {
           title: "Tokyo Love Story",
-          category: "TO-WATCHED",
+          category: "TO-WATCH",
+          type: "TV Series",
           genre: ["Drama", "Romance"],
           country: "Japan",
           rating: 0,
@@ -2198,6 +2421,7 @@
         {
           title: "Sex and the City",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Romance", "Comedy", "Life"],
           country: "US",
           rating: 5,
@@ -2206,6 +2430,7 @@
         {
           title: "Sex and the City 2",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Romance", "Comedy", "Life"],
           country: "US",
           rating: 5,
@@ -2214,46 +2439,52 @@
         {
           title: "Sex and the City 3",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Romance", "Comedy", "Life"],
           country: "US",
-          rating: 5,
+          rating: 4,
           image: "../img/sex3.jpg",
         },
         {
           title: "Sex and the City 4",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Romance", "Comedy", "Life"],
           country: "US",
-          rating: 5,
+          rating: 3,
           image: "../img/sex4.jpg",
         },
         {
           title: "Sex and the City 5",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Romance", "Comedy", "Life"],
           country: "US",
-          rating: 5,
+          rating: 3,
           image: "../img/sex5.jpg",
         },
         {
           title: "Sex and the City 6",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Romance", "Comedy", "Life"],
           country: "US",
-          rating: 5,
+          rating: 3,
           image: "../img/sex6.jpg",
         },
         {
           title: "Sex and the City Movie",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Romance", "Comedy", "Life"],
           country: "US",
-          rating: 5,
+          rating: 1,
           image: "../img/sexmovie.jpg",
         },
         {
           title: "Heartstopper",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Romance", "Comedy", "LGBTQ"],
           country: "UK",
           rating: 5,
@@ -2262,6 +2493,7 @@
         {
           title: "Heartstopper 2",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Romance", "Comedy", "LGBTQ"],
           country: "UK",
           rating: 5,
@@ -2270,6 +2502,7 @@
         {
           title: "Heartstopper 3",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Romance", "Comedy", "LGBTQ"],
           country: "UK",
           rating: 5,
@@ -2278,6 +2511,7 @@
         {
           title: "Adolescence",
           category: "WATCHED",
+          type: "TV Series",
           genre: ["Drama", "Crime"],
           country: "UK",
           rating: 5,
@@ -2286,6 +2520,7 @@
         {
           title: "Friendly Rivalry",
           category: "WATCHING",
+          type: "TV Series",
           genre: ["Drama", "Mystery", "Thriller", "LGBTQ"],
           country: "Korea",
           rating: 3,
@@ -2294,53 +2529,82 @@
         {
           title: "The Residence",
           category: "TO-WATCH",
+          type: "TV Series",
           genre: ["Drama", "Mystery", "Thriller", "Crime"],
           country: "Korea",
-          rating: 3,
+          rating: 0,
           image: "../img/residence.jpg",
         },
       ];
 
       // 渲染分页的 Thumb 数据
-      const renderThumbs = (filterCategory = "ALL") => {
+      const renderThumbs = () => {
         const container = document.getElementById("thumb-container");
-        container.innerHTML = ""; // Clear the container
+        container.innerHTML = ""; // 清空容器
 
-        // Filter data based on category
-        const filteredThumbs = thumbs.filter(
-          (thumb) =>
-            filterCategory === "ALL" || thumb.category === filterCategory
-        );
+        // 根据过滤条件筛选数据
+        const filteredThumbs = thumbs.filter((thumb) => {
+          const matchesCategory =
+            currentCategoryFilter === "ALL" ||
+            thumb.category === currentCategoryFilter;
+          const matchesType =
+            currentTypeFilter === "ALL" ||
+            (Array.isArray(thumb.type)
+              ? thumb.type.includes(currentTypeFilter)
+              : thumb.type === currentTypeFilter);
+          const matchesGenre =
+            currentGenreFilter === "ALL" ||
+            (Array.isArray(thumb.genre)
+              ? thumb.genre.includes(currentGenreFilter)
+              : thumb.genre === currentGenreFilter);
+          const matchesCountry =
+            currentCountryFilter === "ALL" ||
+            thumb.country === currentCountryFilter;
+          return (
+            matchesCategory && matchesType && matchesGenre && matchesCountry
+          );
+        });
 
-        // Calculate pagination data
+        // 计算分页数据
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const paginatedThumbs = filteredThumbs.slice(startIndex, endIndex);
 
-        // Dynamically generate HTML
+        // 动态生成 HTML
         paginatedThumbs.forEach((thumb) => {
           const thumbHTML = `
-            <div class="thumb" data-title="${thumb.title}" data-category="${
-            thumb.category
-          }">
-              <div class="content-row">
-                <img data-src="${
-                  thumb.image
-                }" alt="poster" class="lazy-image" />
-                <article class="description">
-                  <h3 id="filmtitle"><a href="#">${thumb.title}</a></h3>
-                  <div class="stars">${generateStars(thumb.rating)}</div>
-                </article>
+                  <div class="thumb" data-title="${
+                    thumb.title
+                  }" data-category="${thumb.category}">
+                      <div class="film-card" onclick="flipCard(this)">
+              <!-- 正面 -->
+              <div class="film-front">
+                        <img data-src="${
+                          thumb.image
+                        }" alt="poster" class="lazy-image" />
+                        <article class="description">
+                          <h3 id="filmtitle"=>${thumb.title}</h3>
+                          <div class="stars">${generateStars(
+                            thumb.rating
+                          )}</div>
+                        </article>
+                    </div>
+              <!-- 背面 -->
+              <div class="film-back">
+                <p class="film-comment">
+                   ${thumb.comment || "No comment available."}
+                </p>
               </div>
             </div>
-          `;
+          </div>
+                `;
           container.innerHTML += thumbHTML;
         });
 
-        // Initialize lazy loading
+        // 初始化懒加载
         initializeLazyLoading();
 
-        // Render pagination buttons
+        // 渲染分页按钮
         renderPagination(filteredThumbs.length);
       };
 
@@ -2383,42 +2647,39 @@
       // 渲染分页按钮
       const renderPagination = (totalItems) => {
         const paginationContainer = document.getElementById("pagination");
-        paginationContainer.innerHTML = ""; // Clear pagination buttons
+        paginationContainer.innerHTML = ""; // 清空分页按钮
 
         const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-        // Add "Previous Page" button
         const prevButton = document.createElement("button");
         prevButton.textContent = "Previous";
-        prevButton.disabled = currentPage === 1; // Disable if on the first page
+        prevButton.disabled = currentPage === 1;
         prevButton.addEventListener("click", () => {
           if (currentPage > 1) {
             currentPage--;
-            renderThumbs(); // Re-render the current page
+            renderThumbs();
           }
         });
         paginationContainer.appendChild(prevButton);
 
-        // Add numbered buttons
         for (let i = 1; i <= totalPages; i++) {
           const button = document.createElement("button");
           button.textContent = i;
           button.className = i === currentPage ? "active" : "";
           button.addEventListener("click", () => {
             currentPage = i;
-            renderThumbs(); // Re-render the current page
+            renderThumbs();
           });
           paginationContainer.appendChild(button);
         }
 
-        // Add "Next Page" button
         const nextButton = document.createElement("button");
         nextButton.textContent = "Next";
-        nextButton.disabled = currentPage === totalPages; // Disable if on the last page
+        nextButton.disabled = currentPage === totalPages;
         nextButton.addEventListener("click", () => {
           if (currentPage < totalPages) {
             currentPage++;
-            renderThumbs(); // Re-render the current page
+            renderThumbs();
           }
         });
         paginationContainer.appendChild(nextButton);
@@ -2446,22 +2707,45 @@
 
         paginatedThumbs.forEach((thumb) => {
           const thumbHTML = `
-                  <div class="thumb" data-title="${
-                    thumb.title
-                  }" data-category="${thumb.category}">
-                    <div class="content-row">
-                      <img src="${thumb.image}" alt="poster" />
-                      <article class="description">
-                        <h3 id="filmtitle"><a href="#">${thumb.title}</a></h3>
-                        <div class="stars">${generateStars(thumb.rating)}</div>
-                      </article>
-                    </div>
-                  </div>
-                `;
+          <div class="thumb" data-title="${thumb.title}" data-category="${
+            thumb.category
+          }">
+
+                <img data-src="${
+                  thumb.image
+                }" alt="poster" class="lazy-image" />
+                <article class="description">
+                  <h3 id="filmtitle">${thumb.title}</h3>
+                  <div class="stars">${generateStars(thumb.rating)}</div>
+                </article>
+
+          </div>
+        `;
           container.innerHTML += thumbHTML;
         });
 
         renderPagination(filteredThumbs.length);
+      };
+
+      // 渲染分类过滤器
+      const renderGenreFilter = () => {
+        const genreContainer = document.getElementById(
+          "genre-filter-container"
+        );
+        const genreList = document.getElementById("genre-filter");
+
+        // 清空之前的分类选项
+        genreList.innerHTML = "";
+
+        // 动态生成分类选项
+        genres.forEach((genre) => {
+          const genreItem = document.createElement("li");
+          genreItem.innerHTML = `<a href="#" onclick="filterGenre('${genre}', this)">${genre}</a>`;
+          genreList.appendChild(genreItem);
+        });
+
+        // 显示分类容器
+        genreContainer.style.display = "block";
       };
 
       // 初始渲染所有 Thumbs
@@ -2478,12 +2762,14 @@
       });
 
       // 更新标题并过滤内容
-      const updateTitle = (newTitle) => {
+      const updateTitle = (newCategory) => {
         const mainTitle = document.getElementById("main-title");
         if (mainTitle) {
-          mainTitle.textContent = newTitle; // 更新标题内容
+          mainTitle.textContent = newCategory; // 更新标题内容
         }
-        filterThumbs(newTitle); // 调用过滤函数
+        currentCategoryFilter = newCategory; // 更新分类过滤条件
+        currentPage = 1; // 重置到第一页
+        renderThumbs(); // 重新渲染
       };
 
       // 过滤 Thumb 数据
@@ -2491,10 +2777,52 @@
         currentPage = 1; // 重置到第一页
         renderThumbs(category);
       };
+
+      const filterCategory = (type, element) => {
+        // 移除所有选项的 active 类
+        document.querySelectorAll(".sub-menu li a").forEach((link) => {
+          link.classList.remove("active");
+        });
+
+        // 为当前选中的选项添加 active 类
+        element.classList.add("active");
+
+        currentTypeFilter = type; // 更新类型过滤条件
+        currentPage = 1; // 重置到第一页
+
+        renderCountryFilter(); // 显示国家选项
+        renderGenreFilter(); // 显示分类选项
+        renderThumbs(); // 重新渲染
+      };
+
+      function flipCard(element) {
+        // 获取父级 film-card 容器
+        const card = element.closest(".film-card");
+        // 切换 flipped 类
+        card.classList.toggle("flipped");
+      }
+
+      // 确保事件绑定正确
+      document.addEventListener("DOMContentLoaded", function () {
+        const hamburger = document.getElementById("hamburger");
+        if (hamburger) {
+          hamburger.addEventListener("click", function (e) {
+            e.stopPropagation(); // 防止事件冒泡
+            toggleMenu();
+          });
+        }
+      });
+
+      function toggleMenu() {
+        const navbar = document.getElementById("main-nav");
+        if (navbar) {
+          navbar.classList.toggle("show");
+        }
+      }
     </script>
   </head>
 
-  <body id="tech">
+  <body id="screen">
     <!-- Header -->
     <header>
       <span class="mobile-menu" id="hamburger"> &#8801; </span>
@@ -2505,15 +2833,45 @@
           <li><a href="./Watchlist.html" id="watchlist-link">WATCHLIST</a></li>
         </ul>
       </nav>
-      <h1 class="title" id="main-title">WATCHLIST</h1>
+      <div class="dropdown-center">
+        <button
+          class="btn btn-secondary"
+          type="button"
+          id="watchlistDropdown"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <h1 class="title" id="main-title">WATCHLIST</h1>
+        </button>
+
+        <ul class="dropdown-menu" aria-labelledby="watchlistDropdown">
+          <li>
+            <a class="dropdown-item" href="#" onclick="updateTitle('TO-WATCH')"
+              >TO-WATCH</a
+            >
+          </li>
+          <li>
+            <a class="dropdown-item" href="#" onclick="updateTitle('WATCHED')"
+              >WATCHED</a
+            >
+          </li>
+          <li>
+            <a class="dropdown-item" href="#" onclick="updateTitle('WATCHING')"
+              >WATCHING</a
+            >
+          </li>
+        </ul>
+      </div>
     </header>
 
     <!-- Sub Navigation -->
     <nav id="sub-nav">
       <ul class="sub-menu">
-        <li><a href="#" onclick="updateTitle('WATCHED')">WATCHED</a></li>
-        <li><a href="#" onclick="updateTitle('WATCHING')">WATCHING</a></li>
-        <li><a href="#" onclick="updateTitle('TO-WATCH')">TO-WATCH</a></li>
+        <li>
+          <a href="#" onclick="filterCategory('TV Series', this)">TV Series</a>
+        </li>
+        <li><a href="#" onclick="filterCategory('Animes', this)">Animes</a></li>
+        <li><a href="#" onclick="filterCategory('Movies', this)">Movies</a></li>
       </ul>
       <div class="search-container">
         <input
@@ -2526,9 +2884,28 @@
       </div>
     </nav>
 
+    <!-- Filters Container -->
+    <div id="filters-container">
+      <!-- Country Filter Container -->
+      <div id="country-filter-container">
+        <div class="filter-row">
+          <span>Country:</span>
+          <ul id="country-filter" class="sub-menu"></ul>
+        </div>
+      </div>
+
+      <!-- Genre Filter Container -->
+      <div id="genre-filter-container">
+        <div class="filter-row">
+          <span>Genre:</span>
+          <ul id="genre-filter" class="sub-menu"></ul>
+        </div>
+      </div>
+    </div>
+
     <!-- Main Content -->
     <div class="container" id="thumb-container"></div>
-    <div id="pagination" class="pagination"></div>
+    <div class="pagination" id="pagination"></div>
 
     <footer>
       <p>© 2025 · Ting's ScreenDiary · All Rights Reserved</p>
@@ -2542,5 +2919,10 @@
         </ul>
       </nav>
     </footer>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

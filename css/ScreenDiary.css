@@ -34,12 +34,12 @@
 /* Global Styles */
 * {
   box-sizing: border-box;
-  cursor: url("../img/cursor-1.png") 30 30, auto;
+  cursor: url("../img/cursor-1.png") 20 20, auto;
 }
 
 a {
-  text-decoration: none;
-  cursor: url("../img/cursor-2.png") 30 30, auto;
+  text-decoration: none !important;
+  cursor: url("../img/cursor-2.png") 20 20, auto;
 }
 a:hover {
   text-decoration: none;
@@ -57,13 +57,13 @@ body {
   mix-blend-mode: multiply;
 }
 
-#tech h1 {
+#screen h1 {
   font-family: var(--ff-heading);
   font-size: 48px;
 }
 
-body#tech,
-body#tech button body#tech input body#tech textarea {
+body#screen,
+body#screen button body#screen input body#screen textarea {
   font-family: var(--ff-body);
   font-weight: bolder;
 }
@@ -142,7 +142,6 @@ img {
   padding: 2rem;
   margin: 0 auto;
   color: var(--c-text);
-  background-color: var(--c-bg);
 }
 
 .container h2 {
@@ -158,6 +157,7 @@ img {
   margin: 1rem auto;
   border: 5px dashed var(--c-btn-hover);
   padding: 1rem;
+  background-color: var(--c-bg);
 }
 
 .thumb .category {
@@ -266,7 +266,7 @@ form {
 
 .btn-dark:hover {
   background-color: var(--c-btn-hover);
-  cursor: url("../img/cursor-2.png") 30 30, auto;
+  cursor: url("../img/cursor-2.png") 20 20, auto;
 }
 
 /* Pagination */
@@ -281,23 +281,7 @@ form {
   padding: 0.5rem 1rem;
   border: 1px solid #ccc;
   background-color: #f9f9f9;
-  cursor: pointer;
-}
-
-.pagination button.active {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
-}
-
-.pagination button:disabled {
-  background-color: #e9ecef;
-  color: #6c757d;
-  cursor: not-allowed;
-}
-
-.pagination button:hover:not(:disabled) {
-  background-color: #ddd;
+  cursor: url("../img/cursor-2.png") 20 20, auto;
 }
 
 /* Footer */
@@ -317,9 +301,17 @@ footer a {
   color: var(--f-text);
 }
 
+footer ul {
+  margin: 0.5rem;
+}
+
+footer p {
+  margin: 0.5rem;
+}
+
 footer a:hover {
   color: var(--c-btn-hover);
-  cursor: url("../img/cursor-2.png") 30 30, auto;
+  cursor: url("../img/cursor-2.png") 20 20, auto;
 }
 
 /* Media Queries */
@@ -348,7 +340,7 @@ footer a:hover {
 
 /* PHONES */
 @media screen and (max-width: 768px) {
-  #tech h1 {
+  #screen h1 {
     font-size: 30px;
   }
 
@@ -361,11 +353,11 @@ footer a:hover {
   .mobile-menu {
     display: block;
     position: absolute;
-    top: 2rem;
+    top: 1.7rem;
     right: 1.5rem;
     color: var(--c-bg-btn);
     font-size: 2rem;
-    cursor: url("../img/cursor-2.png") 30 30, auto;
+    cursor: url("../img/cursor-2.png") 20 20, auto;
   }
 
   .mobile-menu:hover {
