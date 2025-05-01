@@ -402,6 +402,10 @@ img {
   position: relative;
 }
 
+.film-content {
+  margin: 1.5rem;
+}
+
 /* 卡片内容 */
 .film-card > div {
   width: 100%;
